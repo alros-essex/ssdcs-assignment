@@ -6,6 +6,8 @@
 
 [notes](notes/notes.md)
 
+[Webapp + Nginx and SSL in Docker Compose](notes/WebappNginxSSLinDockerCompose.pdf): this is an article Alberto wrote for his blog. It explains the basics of Docker, Docker Compose, and Nginx.
+
 ### documents
 
 NASA (2007) Final Report of the International Space Station Independent Safety Task Force. Available from [nasa.gov](https://www.nasa.gov/pdf/170368main_IIST_%20Final%20Report.pdf) or [this repo](documents/170368main_IIST_Final_Report.pdf)
