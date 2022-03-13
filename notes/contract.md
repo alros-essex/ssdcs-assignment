@@ -14,25 +14,9 @@ We are supposed to take some initial decisions
 > * ROLES: Which roles do we need in this project and how do we allocate them? Will there be a project lead? Is there a need to rotate roles?
 > * CONSEQUENCES: How will we address non-performance regarding these goals, expectations, policies and procedures? How do we resolve disagreements?
 
-## Contract
-
-[contract we have to complete](TeamContract.docx)
-
 ### Draft
 
-* GOALS:
-  * we aim to develop a way to collaborate as a team to effectively develop a software
-  * we aim to understand the techniques to develop a safe software
-* EXPECTATION:
-  * we expect to communicate on Slack and to keep each other informed on the progress of the work
-  * we expect to draft a first version in the first 3 weeks to refine it before the deadline
-* POLICIES:
-  * avoid plagiarism
-  * push the text on GitHub to keep it visible only to the team
-* ROLES:
-  * ...?
-* CONSEQUENCES:
-  * ...?
+[contract we have to complete](TeamContract.docx)
 
 ## Discussion
 
