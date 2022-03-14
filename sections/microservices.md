@@ -12,7 +12,7 @@ A database is responsible for the storage of the data. The database will be SQL/
 * TBD
 * TBD
 
-The database requires a persistent volume for the database. The secrets will be managed by TBD.
+The database requires a persistent volume for the data. The secrets will be managed by TBD.
 
 ## Nginx
 
