@@ -13,7 +13,10 @@ We need to design an application with these characteristics:
 * microservice:
   * scalability: I suppose they mean dockerize the application and being able to run multiple instances. Docker should be easy to add at the end. To run multiple instances we have to deal with the user's session.
   * distributed session: it's hard to do and avoided. A common solution is to delegate the authentication (but not the authorization) to a frontend node so the service can be stateless.
-* two events occurring: I assume that this is to demonstrate that we built something thread-safe. We can setup some script to fire multiple calls at the same time to demo it.
+* two events occurring: this must be implemented by two process that send messages to a broker, with our software consuming the messages.
+
+![components](components.drawio.png)
+[sources of the diagram](components.drawio)
 
 
 To be included
