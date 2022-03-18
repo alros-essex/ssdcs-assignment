@@ -7,7 +7,9 @@ setup(
     test_suite = 'test',
     install_requires=[
         "flask >= 2.0.0",
-        "pika >= 1.2.0"
+        "pika >= 1.2.0",
+        "mysql-connector-python == 8.0.28"
+
     ],
     python_requires='>=3.6'
 )

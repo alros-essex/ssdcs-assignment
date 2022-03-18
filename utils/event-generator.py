@@ -6,5 +6,5 @@ if __name__ == "__main__":
     channel.queue_declare(queue='hello')
     channel.basic_publish(exchange='',
                           routing_key='hello',
-                          body='Hello World!')
+                          body='123')
     connection.close()

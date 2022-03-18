@@ -1,7 +1,12 @@
 import pika
 import time
 
+from storage import Storage
+
 class RabbitApp():
+
+    def __init__(self) -> None:
+        self._storage = Storage()
 
     def run(self):
         disconnected = True
@@ -15,7 +20,7 @@ class RabbitApp():
         channel.queue_declare(queue='hello')
 
         def callback(ch, method, properties, body):
-            print(" [x] Received %r" % body)
+            self._storage.insert(body)
 
         channel.basic_consume(queue='hello',
                               auto_ack=True,
