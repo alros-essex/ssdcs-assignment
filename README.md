@@ -6,6 +6,10 @@
 
 [notes](notes/notes.md)
 
+### Sections of the assignment
+
+* [components](documents/sections/components.md) <img src="https://img.shields.io/badge/Content-in_progress-%23ff0"/> <img src="https://img.shields.io/badge/Turnitin-to_do-%23ff0"/>
+
 ### documents
 
 NASA (2007) Final Report of the International Space Station Independent Safety Task Force. Available from [nasa.gov](https://www.nasa.gov/pdf/170368main_IIST_%20Final%20Report.pdf) or [this repo](documents/170368main_IIST_Final_Report.pdf)
