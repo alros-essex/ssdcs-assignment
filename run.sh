@@ -1,8 +1,20 @@
 #!/bin/sh
 
-openssl req -x509 -nodes -newkey rsa:2048 -keyout key.pem -out cert.pem -sha256 -days 365 \
-    -subj "/C=GB/ST=London/L=London/O=Assignemt Security Group/OU=IT Department/CN=localhost"
+BUILD_NGINX=`true`
+BUILD_APP=`true`
 
-docker build . -t safe_repository
+if $BUILD_NGINX
+then
+    cd containers/nginx/
+    docker build . -t custom_nginx
+    cd ../..
+fi
+
+if $BUILD_APP
+then
+    cd containers/app
+    docker build . -t safe_repository
+    cd ../..
+fi
 
 docker-compose up

@@ -8,8 +8,8 @@ setup(
     install_requires=[
         "flask >= 2.0.0",
         "pika >= 1.2.0",
-        "mysql-connector-python == 8.0.28"
-
+        "mysql-connector-python == 8.0.28",
+        "python-logstash >= 0.4.6"
     ],
     python_requires='>=3.6'
 )

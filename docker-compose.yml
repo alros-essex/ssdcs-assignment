@@ -1,37 +1,90 @@
 version: "3.9"
 services:
+
   app:
     image: safe_repository:latest
     container_name: app
-    depends_on:
-      - rabbit
-      - mysql
+    #depends_on:
+    #  - elasticsearch
+    #   - rabbit
+    #   - mysql
+
   nginx:
-    image: nginx
+    image: custom_nginx:latest
     container_name: nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./key.pem:/root/ssl/key.pem
-      - ./cert.pem:/root/ssl/cert.pem
     ports:
       - "443:443"
     depends_on:
       - app
-  rabbit:
-    image: "rabbitmq:3-management"
-    container_name: rabbit
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-  mysql:
-    # for M1
-    # platform: linux/x86_64
-    image: mysql:5.7
-    container_name: mysql
-    command: mysqld --sql_mode="" --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    volumes:
-      - ./dbschema:/docker-entrypoint-initdb.d
-    ports:
-      - "3306:3306"
+      - logstash
+
+  # rabbit:
+  #   image: "rabbitmq:3-management"
+  #   container_name: rabbit
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+
+  # mysql:
+  #   # for M1
+  #   # platform: linux/x86_64
+  #   image: mysql:5.7
+  #   container_name: mysql
+  #   command: mysqld --sql_mode="" --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  #   volumes:
+  #     - ./dbschema:/docker-entrypoint-initdb.d
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=password
+
+  elasticsearch:
+    image: elasticsearch:6.5.4
+    container_name: elasticsearch
     environment:
-      - MYSQL_ROOT_PASSWORD=password
+      - node.name=ws-es-node
+      - discovery.type=single-node
+      - cluster.name=ws-es-data-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - vibhuviesdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    image: kibana:6.5.4
+    container_name: kibana
+    environment:
+      SERVER_NAME: 127.0.0.1
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    container_name: logstash
+    image: logstash:6.5.4
+    volumes:
+    - ./containers/logstash:/usr/share/logstash/pipeline/
+    ports:
+      - 5044:5044
+      - 5959:5959
+      - 15601:5601
+    depends_on:
+      - elasticsearch
+
+configs:
+  logstash:
+    file: ./logstash.conf
+
+volumes:
+  vibhuviesdata:
+    driver: local
+
