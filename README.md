@@ -10,6 +10,7 @@
 
 * [overview](documents/sections/overview.md) <img src="https://img.shields.io/badge/Content-in_progress-%23ff0"/> <img src="https://img.shields.io/badge/Turnitin-to_do-%23ff0"/>
 * [components](documents/sections/components.md) <img src="https://img.shields.io/badge/Content-in_progress-%23ff0"/> <img src="https://img.shields.io/badge/Turnitin-to_do-%23ff0"/>
+* [security](documents/sections/security.md) <img src="https://img.shields.io/badge/Content-in_progress-%23ff0"/> <img src="https://img.shields.io/badge/Turnitin-to_do-%23ff0"/>
 
 ### documents
 
