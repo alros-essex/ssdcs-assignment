@@ -10,7 +10,19 @@ There will be two kinds of resources: users, experiments, and measurements.
 
 Users will represent the users authorized to interact with the solution. There will be two user types: administrators and scientists with the following role matrix:
 
-TBD
+*Administrators*
+| resource      | scope    | access |
+|---------------|----------|--------|
+| users         | complete | RW     |
+| experiments   | complete | RW     |
+| measurementes | complete | R      |
+
+*Scientists*
+| resource      | scope                                           | access |
+|---------------|-------------------------------------------------|--------|
+| users         | user's record                                   | RW     |
+| experiments   | only records associated with user               | RW     |
+| measurementes | only records associated with user's experiments | R      |
 
 ### Experiments
 
