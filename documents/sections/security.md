@@ -1,12 +1,10 @@
-# ssdcs-design
-
-## Security
+# Security
 
 Using the STRIDE model, the following threats were identified and classified with DREAD.
 
-### Spoofing
+## Spoofing
 
-#### User's credentials violation
+### User's credentials violation
 
 | Type | Level |
 |------|-------|
@@ -16,9 +14,9 @@ Using the STRIDE model, the following threats were identified and classified wit
 | Affected users | One user. All, if the user is administrator |
 | Discoverability | Medium. User's credentials may be easy to guess |
 
-### Tampering
+## Tampering
 
-#### Introducing fake measurements on the message broker
+### Introducing fake measurements on the message broker
 
 | Type | Level |
 |------|-------|
@@ -28,13 +26,13 @@ Using the STRIDE model, the following threats were identified and classified wit
 | Affected users | All scientists |
 | Discoverability | Medium. The broker is public, but credentials are highly secure |
 
-### Repudiation
+## Repudiation
 
 N.A.
 
-### Information disclosure
+## Information disclosure
 
-#### Database breach
+### Database breach
 
 | Type | Level |
 |------|-------|
@@ -45,9 +43,9 @@ N.A.
 | Discoverability | Low |
 
 
-### Denial of service
+## Denial of service
 
-#### DDos on APIs
+### DDos on APIs
 
 | Type | Level |
 |------|-------|
@@ -57,9 +55,9 @@ N.A.
 | Affected users | All |
 | Discoverability | Low. It would be difficult to plan an effective attack. |
 
-### Elevation of privilege
+## Elevation of privilege
 
-#### Scientists becoming administrators
+### Scientists becoming administrators
 
 | Type | Level |
 |------|-------|
