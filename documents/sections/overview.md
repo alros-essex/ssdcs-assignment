@@ -1,12 +1,8 @@
-# ssdcs-design
+# Overview
 
-## Overview
+"Safe Repository" will be a solution to store streams of experimental data and make them available to scientists. The data will be delivered to the solution in the form of messages from a Message Broker. Data will be made available through a REST interface. There will be three resources: users, experiments, and measurements.
 
-Safe Repository will be a solution to store experimental data. It will offer REST APIs to manipulate resources and consume events from a Message Broker.
-
-There will be two kinds of resources: users, experiments, and measurements.
-
-### Users
+## Users
 
 Users will represent the users authorized to interact with the solution. There will be two user types: administrators and scientists with the following role matrix:
 
@@ -15,19 +11,19 @@ Users will represent the users authorized to interact with the solution. There w
 |---------------|----------|--------|
 | users         | complete | RW     |
 | experiments   | complete | RW     |
-| measurementes | complete | R      |
+| measurements  | complete | R      |
 
 *Scientists*
 | resource      | scope                                           | access |
 |---------------|-------------------------------------------------|--------|
 | users         | user's record                                   | RW     |
 | experiments   | only records associated with user               | RW     |
-| measurementes | only records associated with user's experiments | R      |
+| measurements  | only records associated with user's experiments | R      |
 
-### Experiments
+## Experiments
 
 Experiments will represent single experiments. Only administrators and scientists associated with the experiment will have access to an experiment.
 
-### Data
+## Data
 
 Raw data from the measurements. It will be a read-only resource associated with an experiment displaying the measurements collected from the Message Broker.
