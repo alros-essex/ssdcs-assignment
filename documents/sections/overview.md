@@ -1,6 +1,6 @@
 # Overview
 
-"Safe Repository" will be a solution to store streams of experimental data and make them available to scientists. The data will be delivered to the solution in the form of messages from a Message Broker. Data will be made available through a REST interface. There will be three resources: users, experiments, and measurements.
+"Safe Repository" will be a solution to store streams of experimental data for the Hadron Collider at CERN and make them available to scientists. The data will be delivered to the solution in the form of messages from a Message Broker. Data will be made available through a REST interface. There will be three resources: users, experiments, and measurements.
 
 ## Users
 
