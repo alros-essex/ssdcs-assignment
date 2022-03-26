@@ -1,6 +1,4 @@
-# ssdcs-design
-
-## Tools
+# Tools
 
 * Elastic Search - Elasticsearch is highly scalable, it will allow to store, search, and analyze huge volumes of data in near real-time. It is able to achieve fast search responses as Elasticsearch searches an index instead of text directly.
 * Kibana – Will allow to visualize data and monitor the application. It offers a powerful and easy-to-use visualization tool such as line graphs, pie charts, heat maps, and histograms. Kibana sits on top of the Elasticsearch stack in turn provide data visualization capabilities for data indexed in Elasticsearch.
