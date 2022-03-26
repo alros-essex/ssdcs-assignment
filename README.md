@@ -6,9 +6,11 @@
 
 [notes](notes/notes.md)
 
+[draft](documents/safe-repository.pdf) <img src="https://img.shields.io/badge/Content-incomplete-%23ff0"/> <img src="https://img.shields.io/badge/Turnitin-to_do-%23ff0"/>
+
 ### Sections of the assignment
 
-* [see](documents/sections/) <img src="https://img.shields.io/badge/Content-in_progress-%23ff0"/> <img src="https://img.shields.io/badge/Turnitin-to_do-%23ff0"/>
+* [see](documents/sections/)
 
 ### documents
 
