@@ -2,7 +2,9 @@
 
 ## Periodic pressure on resources
 
-All components of the solution will be stateless and allow for horizontal scalability.  Clustering solutions such as Kubernetes have autoscale functionality to regulate the number of running instances and deal with variable demand. Autoscale functions are also efficient to contain the costs since additional CPUs and memory are allocated and billed only when required.
+Except for the database, all components of the solution will be stateless and allow for horizontal scalability.  Clustering solutions such as Kubernetes have autoscale functionality to regulate the number of running instances and deal with variable demand. Autoscale functions are also efficient to contain the costs since additional CPUs and memory are allocated and billed only when required.
+
+SQL databases scale well vertically, and it will be easier to scale the number of resources.
 
 ## Interactive response requirements between request and reply
 
