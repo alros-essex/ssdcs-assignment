@@ -2,7 +2,7 @@
 
 ![components](components.png)
 
-The solution comprises multiple components responsible for different aspects.
+The solution comprises multiple components responsible for different aspects. The solution (in the blue area of the diagram) will interact with external data producers and users.
 
 ## Deployment
 
@@ -16,15 +16,13 @@ For this purpose, the implementation will use Nginx, which could also implement 
 
 ## Data Streams
 
-An MQ Broker will expose queues to accept data streams from the experiments. (TBD encryption)
+An MQ Broker will expose queues to accept data streams from the experiments.
 
-RabbitMQ is one of the most popular tools on the market for this particular need. (TBD usage of exchange and routing keys)
+RabbitMQ is one of the most popular tools on the market for this particular need. RabbiMQ supports TLS to encrypt communications and clustering to address scalability issues.
 
 ## Storage
 
 A database is responsible for the storage of the application's data. Being the model of the data known, a SQL Database represents a simple solution. Further expansions could consider moving the experiments' data to a NoSQL database that may offer better scalability.
-
-(TBD encryption)
 
 There are no special requirements to guide the choice of a product. MySQL will be the initial choice. The application's design will ensure a level of abstraction to minimize the impact of a change should new insights suggest a different product would be a better fit.
 
@@ -33,6 +31,10 @@ There are no special requirements to guide the choice of a product. MySQL will b
 Safe Repository is the core component responsible for storing Hadron Collider's experimental data. It will expose multiple HTTP endpoints to configure the application resources and will process parallel data streams through input queues. The application stores the information on an external database. Safe Repository will not be exposed directly to outside traffic.
 
 Safe Repository will be implemented in Python using Flask to expose REST APIs and Pika to process MQ Queues.
+
+## Filesystem encryption
+
+Filesystem encryption can be used to host the filesystems of the storage and the broker. This configuration is transparent for the solution.
 
 ## Logging and Monitoring
 
