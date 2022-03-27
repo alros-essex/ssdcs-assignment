@@ -10,4 +10,4 @@ TBD
 
 ## Substantial data download requirements
 
-It is expected an elevated flow of data coming from queues while users will visualize them almost in real-time. The database will act as a buffer between the component responsible for storing the incoming data and the component responsible to make it available to the users. It is expected that the highest pressure could come from the input flow. For this reason (TBD)
+It is expected an elevated flow of data coming from queues while users will visualize them almost in real-time. The database will act as a buffer between the component responsible for storing the incoming data and the component responsible to make it available to the users. It is expected that the highest pressure could come from the input flow. Since reading a large amount of data could put pressure on the database, queries should be paginated.
