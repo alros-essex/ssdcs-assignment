@@ -28,7 +28,7 @@ Using the STRIDE model, the following threats were identified and classified wit
 
 ## Repudiation
 
-N.A.
+Scientists will not be able to manipulate the association between them and the experiments, or between the experiments and the data. Data will not be editable.
 
 ## Information disclosure
 
