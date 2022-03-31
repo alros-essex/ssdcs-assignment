@@ -20,6 +20,8 @@
 
 ### Sections of the assignment
 
+This is no more updated:
+
 * [see](documents/sections/)
 
 ### documents
