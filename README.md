@@ -6,7 +6,7 @@
 
 ## Document
 
-🎸 [MONIT at CERN](https://www.epj-conferences.org/articles/epjconf/pdf/2019/19/epjconf_chep2018_08031.pdf)
+🎸 [MONIT at CERN](https://www.epj-conferences.org/articles/epjconf/pdf/2019/19/epjconf_chep2018_08031.pdf) (the real one)
 
 🍉 [draft of MyMONIT](documents/safe-repository.pdf) (better names are welcome)
 
