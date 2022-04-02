@@ -12,7 +12,7 @@
 
 🍉 [draft of MyMONIT](documents/safe-repository.pdf) (better names are welcome)
 
-<img src="https://img.shields.io/badge/Word_count-915-%230a0"/>
+<img src="https://img.shields.io/badge/Word_count-1212-%23a00"/>
 <img src="https://img.shields.io/badge/Content-incomplete-%23aa0"/>
 <img src="https://img.shields.io/badge/Turnitin-to_do-%23aa0"/>
 
