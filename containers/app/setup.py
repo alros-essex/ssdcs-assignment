@@ -3,7 +3,9 @@ from setuptools import setup, find_packages
 setup(
     name='safe_repository',
     version='0.1.0',
-    packages=find_packages(include=['safe_repository']),
+    setup_requires=['pytest-runner', 'pytest-pylint'],
+    tests_require=['pytest', 'pylint'],
+    packages=find_packages(include=['my_monit']),
     test_suite = 'test',
     install_requires=[
         "flask >= 2.0.0",
