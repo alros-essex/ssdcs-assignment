@@ -51,3 +51,7 @@ start it with
 ```bash
 python3 main.py
 ```
+
+#### Pylint
+
+rules from https://github.com/google/styleguide

@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='safe_repository',
+    name='my_monit',
     version='0.1.0',
     setup_requires=['pytest-runner', 'pytest-pylint'],
     tests_require=['pytest', 'pylint'],
@@ -11,7 +11,8 @@ setup(
         "flask >= 2.0.0",
         "pika >= 1.2.0",
         "mysql-connector-python == 8.0.28",
-        "python-logstash >= 0.4.6"
+        "python-logstash >= 0.4.6",
+        "dependency_injector >= 4.39.1"
     ],
     python_requires='>=3.6'
 )

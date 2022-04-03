@@ -1,4 +1,4 @@
-use safe_repository;
+use my_monit;
 
 CREATE TABLE measures
 (

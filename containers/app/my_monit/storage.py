@@ -1,11 +1,14 @@
 import mysql.connector
 
+from storage_configuration import StorageConfiguration
+
 class Storage():
 
-    def __init__(self) -> None:
-        self.cnx = mysql.connector.connect(user='root', password='password',
-                                           host='mysql',
-                                           database='safe_repository')
+    def __init__(self, storage_configuration:StorageConfiguration) -> None:
+        self.cnx = mysql.connector.connect(user = storage_configuration.user, 
+                                           password = storage_configuration.password,
+                                           host = storage_configuration.host,
+                                           database = storage_configuration.database)
 
     def insert(self, measure) -> None:
 

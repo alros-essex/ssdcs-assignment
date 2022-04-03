@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+
+  rabbit:
+    image: "rabbitmq:3-management"
+    container_name: rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  mysql:
+    # for M1
+    # platform: linux/x86_64
+    image: mysql:5.7
+    container_name: mysql
+    command: mysqld --sql_mode="" --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./dbschema:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password

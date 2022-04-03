@@ -1,1 +1,1 @@
-create schema safe_repository;
+create schema my_monit;
