@@ -1,9 +1,12 @@
 '''RabbitMQ Listener'''
 
+import json
+import datetime
 import time
 import pika
 
-from storage import Storage
+from .storage import Storage
+from .model import Measure
 
 class RabbitConfiguration():
     '''contains all parameters to connect to RabbitMQ'''
@@ -63,8 +66,13 @@ class RabbitMessageProcessor():
     def __init__(self, storage:Storage) -> None:
         self._storage = storage
     
-    def process(self, body:str) -> None:
-        pass
+    def process(self, message:str) -> None:
+        parsed_measure = json.loads(message)
+        measure = Measure(experiment = parsed_measure['experiment'],
+                          type = parsed_measure['measure'], 
+                          timestamp = datetime.timedelta(microseconds = parsed_measure['timestamp']),
+                          value = parsed_measure['value'])
+        self._storage.insert_measure(measure)
 
 class RabbitListener():
     '''Listens to RabbitMQ and processes messages'''
@@ -77,13 +85,9 @@ class RabbitListener():
         '''main method that runs the listener'''
         connection = RabbitConnector.connect(self._configuration)
         channel = connection.channel()
-        channel.queue_declare(queue='hello')
+        channel.queue_declare(queue = self._configuration.queue)
 
-        def callback(_ch, _method, _properties, body):
-            self._message_processor.process(body)
-
-        channel.basic_consume(queue='hello',
-                              auto_ack=True,
-                              on_message_callback=callback)
+        channel.basic_consume(queue = self._configuration.queue,
+                              auto_ack = True,
+                              on_message_callback=self._message_processor.process)
         channel.start_consuming()
-
