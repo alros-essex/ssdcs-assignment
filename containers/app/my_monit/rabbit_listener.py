@@ -8,10 +8,11 @@ from storage import Storage
 class RabbitConfiguration():
     '''contains all parameters to connect to RabbitMQ'''
 
-    def __init__(self, rabbit_url:str, rabbit_user:str, rabbit_password:str) -> None:
+    def __init__(self, rabbit_url:str, rabbit_user:str, rabbit_password:str, rabbit_queue:str) -> None:
         self._rabbit_url = rabbit_url
         self._rabbit_user = rabbit_user
         self._rabbit_password = rabbit_password
+        self._rabbit_queue = rabbit_queue
 
     @property
     def url(self):
@@ -28,32 +29,61 @@ class RabbitConfiguration():
         '''returns password'''
         return self._rabbit_password
 
-class RabbitListener():
-    '''Listens to RabbitMQ and processes messages'''
+    @property
+    def queue(self):
+        '''return queue name'''
+        return self._rabbit_queue
 
-    def __init__(self, configuration:RabbitConfiguration, storage:Storage) -> None:
-        self._configuration = configuration
-        self._storage = storage
+    def __eq__(self, __o: object) -> bool:
+        if isinstance(__o, RabbitConfiguration):
+            return self._rabbit_url == __o._rabbit_url \
+                   and self._rabbit_user == __o._rabbit_user \
+                   and self._rabbit_password == __o._rabbit_password \
+                   and self._rabbit_queue == __o._rabbit_queue
+        return False
+    
+    def __ne__(self, __o: object) -> bool:
+        return not self == __o
 
-    def run(self):
-        '''main method that runs the listener'''
-        connection = RabbitListener.connect(self._configuration)
-        channel = connection.channel()
-        channel.queue_declare(queue='hello')
-
-        def callback(_ch, _method, _properties, body):
-            self._storage.insert(body)
-
-        channel.basic_consume(queue='hello',
-                              auto_ack=True,
-                              on_message_callback=callback)
-        channel.start_consuming()
+class RabbitConnector():
+    '''Utility class to simplify testing'''
 
     @classmethod
-    def connect(cls, configuration:RabbitConfiguration):
+    def connect(cls, configuration:RabbitConfiguration) -> pika.BlockingConnection:
         '''connect to RabbitMQ'''
         while True:
             try:
                 return pika.BlockingConnection(pika.ConnectionParameters(configuration.url))
             except Exception as _error:
                 time.sleep(5)
+
+class RabbitMessageProcessor():
+    '''Utility to process a message'''
+
+    def __init__(self, storage:Storage) -> None:
+        self._storage = storage
+    
+    def process(self, body:str) -> None:
+        pass
+
+class RabbitListener():
+    '''Listens to RabbitMQ and processes messages'''
+
+    def __init__(self, configuration:RabbitConfiguration, message_processor:RabbitMessageProcessor) -> None:
+        self._configuration = configuration
+        self._message_processor = message_processor
+
+    def run(self):
+        '''main method that runs the listener'''
+        connection = RabbitConnector.connect(self._configuration)
+        channel = connection.channel()
+        channel.queue_declare(queue='hello')
+
+        def callback(_ch, _method, _properties, body):
+            self._message_processor.process(body)
+
+        channel.basic_consume(queue='hello',
+                              auto_ack=True,
+                              on_message_callback=callback)
+        channel.start_consuming()
+
