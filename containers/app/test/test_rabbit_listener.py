@@ -73,7 +73,7 @@ class TestRabbitListener(unittest.TestCase):
 
         processor.process(msg)
 
-        self.storage.assert_called_with(Measure(type = 'hertz', 
+        self.storage.insert_measure.assert_called_with(Measure(type = 'hertz', 
                                                 timestamp = datetime.timedelta(microseconds =10000), 
                                                 experiment = 'exp', 
                                                 value = 10.5))

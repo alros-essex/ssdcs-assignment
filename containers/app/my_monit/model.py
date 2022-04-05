@@ -38,3 +38,5 @@ class Measure():
                    and self.value == __o.value
         return False
 
+    def __ne__(self, __o: object) -> bool:
+        return not self == __o
