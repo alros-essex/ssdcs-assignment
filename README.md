@@ -40,23 +40,11 @@ to deploy only RabbitMQ and MySQL: `./runInfra.sh`
 
 ### Python projects
 
-setup with
+setup with `pip3 install -e .`
 
-```bash
-pip3 install -e .
-```
+run the tests with `python3 setup.py test`
 
-run the tests with
-
-```bash
-python3 setup.py test
-```
-
-start it with
-
-```bash
-python3 main.py
-```
+start it with `python3 app.py` (adapters use different names)
 
 #### Pylint
 
