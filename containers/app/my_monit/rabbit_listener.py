@@ -66,7 +66,7 @@ class RabbitMessageProcessor():
     def __init__(self, storage:Storage) -> None:
         self._storage = storage
     
-    def process(self, message:str) -> None:
+    def process(self, _ch, _method, _properties, message) -> None:
         parsed_measure = json.loads(message)
         measure = Measure(experiment = parsed_measure['experiment'],
                           type = parsed_measure['measure'], 
