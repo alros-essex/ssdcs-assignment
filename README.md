@@ -1,4 +1,4 @@
-# ssdcs-design
+# MyMonit
 
 ## Documents
 
@@ -20,19 +20,25 @@
 
 🧲 The Computer Security Team (2020) Computer Security: Digital Stolen Goods of CERN?. Availble from [home.cern](https://home.cern/news/news/computing/computer-security-digital-stolen-goods-cern) or [this repo](documents/Computer-Security-Digital-stolen-goods-of-CERN.pdf)
 
-## 🔐 MyMonit
+## 🔐 Implementation
 
-Usage
+🍊 [project with adapters](./adapters)
 
-### Docker-application
+🍐 [project with MyMonit - core](./containers/app)
 
-run with
+🍋 [Logstash](./containers/logstash)
 
-```bash
-./run.sh
-```
+🥦 [Mysql](./containers/mysql)
 
-### Python application
+🥑 [Nginx](./containers/nginx)
+
+### How to deploy
+
+to start the complete deployment: `./run.sh`
+
+to deploy only RabbitMQ and MySQL: `./runInfra.sh`
+
+### Python projects
 
 setup with
 
