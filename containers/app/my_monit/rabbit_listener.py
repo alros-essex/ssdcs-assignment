@@ -11,10 +11,18 @@ from .model import Measure
 class RabbitConfiguration():
     '''contains all parameters to connect to RabbitMQ'''
 
-    def __init__(self, rabbit_url:str, rabbit_user:str, rabbit_password:str, rabbit_queue:str) -> None:
+    def __init__(self, 
+                 rabbit_url:str,
+                 rabbit_user:str, 
+                 rabbit_password:str, 
+                 rabbit_exchange:str, 
+                 rabbit_routing:str, 
+                 rabbit_queue:str) -> None:
         self._rabbit_url = rabbit_url
         self._rabbit_user = rabbit_user
         self._rabbit_password = rabbit_password
+        self._rabbit_exchange = rabbit_exchange
+        self._rabbit_routing = rabbit_routing
         self._rabbit_queue = rabbit_queue
 
     @property
@@ -85,9 +93,21 @@ class RabbitListener():
         '''main method that runs the listener'''
         connection = RabbitConnector.connect(self._configuration)
         channel = connection.channel()
-        channel.queue_declare(queue = self._configuration.queue)
+
+        channel.exchange_declare(exchange = self._configuration._rabbit_exchange,
+                                 durable=True, 
+                                 auto_delete=False)
+        channel.queue_declare(queue = self._configuration.queue, 
+                              durable=True, 
+                              exclusive=False, 
+                              auto_delete=False)
+
+        channel.queue_bind(queue = self._configuration.queue, 
+                           exchange = self._configuration._rabbit_exchange, 
+                           routing_key = self._configuration._rabbit_routing)
 
         channel.basic_consume(queue = self._configuration.queue,
                               auto_ack = True,
                               on_message_callback=self._message_processor.process)
+
         channel.start_consuming()

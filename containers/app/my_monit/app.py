@@ -26,6 +26,8 @@ class Container(containers.DeclarativeContainer):
         rabbit_url = config.rabbit_url,
         rabbit_user = config.rabbit_user,
         rabbit_password = config.rabbit_password,
+        rabbit_exchange = config.rabbit_exchange,
+        rabbit_routing = config.rabbit_routing,
         rabbit_queue = config.rabbit_queue
     )
 
@@ -76,7 +78,9 @@ def init():
     # rabbit
     container.config.rabbit_url.from_env("RABBIT_URL", default = 'localhost', as_= str)
     container.config.rabbit_user.from_env("RABBIT_USER", default = 'guest', as_= str)
-    container.config.rabbit_password.from_env("RABBIT_PASSWORD", default = 'password', as_= str)
+    container.config.rabbit_password.from_env("RABBIT_PASSWORD", default = 'guest', as_= str)
+    container.config.rabbit_exchange.from_env("RABBIT_EXCHANGE", default = 'mymonit', as_= str)
+    container.config.rabbit_routing.from_env("RABBIT_ROUTING", default = 'measures', as_= str)
     container.config.rabbit_queue.from_env("RABBIT_QUEUE", default = 'measures', as_= str)
     # rest
     container.config.rest_host.from_env("REST_HOST", default = "0.0.0.0", as_ = str)
