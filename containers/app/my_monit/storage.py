@@ -2,6 +2,8 @@
 
 import mysql.connector
 
+from .model import Measure
+
 class StorageConfiguration():
     '''Database configuration'''
 
@@ -40,25 +42,37 @@ class Storage():
                                            host = storage_configuration.host,
                                            database = storage_configuration.database)
 
-    def insert_measure(self, measure) -> None:
+    def insert_measure(self, measure:Measure) -> None:
         '''Inserts a measure'''
-
-        data_measure = {
-            'experiment_id': 100,
-            'measure_id': 200,
-            'measure_value': measure,
-        }
-
-        cursor = self.cnx.cursor()
-        add_measure = ("INSERT INTO measures "
-               "(EXPERIMENT_ID, MEASURE_ID, MEASURE_VALUE) "
-               "VALUES (%(experiment_id)s, %(measure_id)s, %(measure_value)s)")
-        cursor.execute(add_measure, data_measure)
-
-        self.cnx.commit()
-        cursor.close()
+        self._execute('''INSERT INTO MEASURES 
+                      (TYPE, TIMESTAMP, EXPERIMENT_ID, MEASURE_VALUE)
+                      VALUES (
+                      (SELECT ID FROM MEASURE_TYPES WHERE NAME = %(type)s),
+                      FROM_UNIXTIME(%(timestamp)s),
+                      (SELECT ID FROM EXPERIMENTS WHERE NAME = %(experiment)s),
+                      %(value)s)''',
+                      {
+                          'type': measure.type,
+                          'timestamp': measure.timestamp,
+                          'experiment': measure.experiment,
+                          'value': measure.value
+                      })
 
     def read_measure(self):
         '''returns a measure'''
         #TODO
         pass
+
+    def _execute(self, statement, params):
+        """calls the database
+        
+        Args:
+            statement: command to execute
+            params: parameters for the command as a dict
+        Returns:
+            None
+        """
+        cur = self.cnx.cursor()
+        cur.execute(statement, params)
+        self.cnx.commit()
+        return cur

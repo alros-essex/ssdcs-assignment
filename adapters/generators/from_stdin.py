@@ -13,7 +13,7 @@ import pika
 
 RABBIT_HOST = 'localhost'
 RABBIT_EXCHANGE = 'mymonit'
-RABBIT_ROUTING = 'measurements'
+RABBIT_ROUTING = 'measures'
 EXPERIMENT = 'device-vibrations'
 MEASURE = 'hertz'
 
@@ -26,7 +26,7 @@ if __name__ == "__main__":
             'experiment': EXPERIMENT,
             'measure': MEASURE,
             'value': float(line),
-            'timestamp:': time.time()
+            'timestamp': int(time.time())
         }
         channel.basic_publish(exchange=RABBIT_EXCHANGE,
                               routing_key=RABBIT_ROUTING,

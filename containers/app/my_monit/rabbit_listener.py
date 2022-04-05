@@ -78,7 +78,7 @@ class RabbitMessageProcessor():
         parsed_measure = json.loads(message)
         measure = Measure(experiment = parsed_measure['experiment'],
                           type = parsed_measure['measure'], 
-                          timestamp = datetime.timedelta(microseconds = parsed_measure['timestamp']),
+                          timestamp = parsed_measure['timestamp'],
                           value = parsed_measure['value'])
         self._storage.insert_measure(measure)
 
