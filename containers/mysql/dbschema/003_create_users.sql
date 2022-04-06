@@ -26,8 +26,16 @@ CREATE TABLE USERS
 
 INSERT INTO USERS(ID, NAME, EMAIL, ROLE)
 VALUES(
-    'none', 
-    'Default User', 
+    'A001', 
+    'Default Admin', 
     'noreply@localhost', 
     (SELECT ID FROM ROLES WHERE NAME = 'ADMIN')
+);
+
+INSERT INTO USERS(ID, NAME, EMAIL, ROLE)
+VALUES(
+    'S001', 
+    'Peter Higg', 
+    'noreply@localhost', 
+    (SELECT ID FROM ROLES WHERE NAME = 'SCIENTIST')
 );

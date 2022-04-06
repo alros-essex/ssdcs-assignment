@@ -30,6 +30,14 @@ class Measure():
         '''value of the measure'''
         return self._value
 
+    def serialize(self):
+        return {
+            "measure_type": self.measure_type,
+            "timestamp": self.timestamp,
+            "experiment": self.experiment,
+            "value": self.value
+        }
+
     def __eq__(self, __o: object) -> bool:
         if isinstance(__o, Measure):
             return self.measure_type == __o.measure_type \

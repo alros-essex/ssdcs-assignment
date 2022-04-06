@@ -41,6 +41,27 @@ class Storage():
                                            password = storage_configuration.password,
                                            host = storage_configuration.host,
                                            database = storage_configuration.database)
+    
+    def read_measure(self, experiment_id:int, page:int, user_id:str):
+        '''returns measures'''
+        #TODO add pagination
+        cur = self._execute('''SELECT ex.NAME as EXP_NAME, me.TIMESTAMP, me.MEASURE_VALUE, mt.NAME as MSR_TYPE
+                            FROM MEASURES me, EXPERIMENTS ex, MEASURE_TYPES mt, USER_EXPERIMENTS ue
+                            WHERE  me.EXPERIMENT_ID = ex.ID
+                            AND mt.ID = me.TYPE
+                            AND ue.USER_ID = %(user_id)s
+                            AND ue.EXPERIMENT_ID = ex.ID
+                            AND ex.ID = %(experiment_id)s
+                            ORDER BY TIMESTAMP DESC''',
+                            {
+                                'experiment_id': experiment_id,
+                                'user_id': user_id
+                            },
+                            for_update = False)
+        measures = []
+        for row in cur:
+            measures.append(self._to_measures(row))
+        return measures
 
     def insert_measure(self, measure:Measure) -> None:
         '''Inserts a measure'''
@@ -58,11 +79,14 @@ class Storage():
                           'value': measure.value
                       })
 
-    def read_measure(self):
-        '''returns a measure'''
-        #TODO
+    def _to_measures(self, row):
+        '''parses a row: measure type / timestamp / experiment name / value'''
+        return Measure(measure_type = row[0],
+                       timestamp = row[1],
+                       experiment = row[2],
+                       value = row[3])
 
-    def _execute(self, statement, params):
+    def _execute(self, statement, params, for_update = True):
         """calls the database
 
         Args:
@@ -73,5 +97,6 @@ class Storage():
         """
         cur = self.cnx.cursor()
         cur.execute(statement, params)
-        self.cnx.commit()
+        if(for_update):
+            self.cnx.commit()
         return cur

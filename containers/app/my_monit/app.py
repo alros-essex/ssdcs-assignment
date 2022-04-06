@@ -54,16 +54,22 @@ class Container(containers.DeclarativeContainer):
 
     rest = providers.Singleton(
         RestListener,
-        configuration = rest_configuration
+        configuration = rest_configuration,
+        storage = storage
     )
 
 @inject
-def main(rabbit_listener: RabbitListener = Provide[Container.rabbit]):
+def main(rabbit_listener: RabbitListener = Provide[Container.rabbit],
+         rest_listener: RestListener = Provide[Container.rest]):
     '''Kickstart the application'''
     def start_rabbit_listener():
         rabbit_listener.run()
+    def start_rest_listener():
+        rest_listener.run()
     thread_rabbit = threading.Thread(target = start_rabbit_listener)
     thread_rabbit.start()
+    thread_rest = threading.Thread(target = start_rest_listener)
+    thread_rest.start()
     thread_rabbit.join()
 
 def init():
