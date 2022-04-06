@@ -1,0 +1,26 @@
+{
+	"info": {
+		"_postman_id": "e31c30db-b6c2-4c21-9643-3a9bb2ecc834",
+		"name": "MyMonit",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get measures",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/measures",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"measures"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
