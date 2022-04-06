@@ -32,6 +32,14 @@
 
 🥑 [Nginx](./containers/nginx)
 
+🚀 [Postman collection](./postman)
+
+### Requirements
+
+- docker
+- python
+- postman (optional)
+
 ### How to deploy
 
 to start the complete deployment: `./run.sh`
@@ -44,8 +52,39 @@ setup with `pip3 install -e .`
 
 run the tests with `python3 setup.py test`
 
-start it with `python3 app.py` (adapters use different names)
+start it with `python3 main.py` (adapters use different names)
 
 #### Pylint
 
 rules from https://github.com/google/styleguide
+
+### 😃 How to take a quick look 😃
+
+Install the prerequisites.
+
+start infra:
+
+```bash
+./runInfra.sh
+```
+
+start the application:
+```
+cd containers/app/
+python3 main.py
+```
+
+start stdin adapter:
+
+```bash
+cd adapters/generators
+python3 from_stdin.py
+```
+
+insert data by typing in the adapter's console (push return) and retrieve data with:
+
+```bash
+curl --location --request GET 'http://localhost:5000/measures/1'
+```
+
+Please note that there is hardcoded data in the db (for testing)
