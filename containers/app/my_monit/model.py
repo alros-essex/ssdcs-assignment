@@ -3,17 +3,17 @@
 class Measure():
     '''Models one Measure'''
 
-    def __init__(self, type:str, timestamp:str, experiment:str, value:float) -> None:
+    def __init__(self, measure_type:str, timestamp:str, experiment:str, value:float) -> None:
         '''high level constructor where measure type and experiment are strings'''
-        self._type = type
+        self._measure_type = measure_type
         self._timestamp = timestamp
         self._experiment = experiment
         self._value = value
 
     @property
-    def type(self):
+    def measure_type(self):
         '''measure type'''
-        return self._type
+        return self._measure_type
 
     @property
     def timestamp(self):
@@ -32,7 +32,7 @@ class Measure():
 
     def __eq__(self, __o: object) -> bool:
         if isinstance(__o, Measure):
-            return self.type == __o.type \
+            return self.measure_type == __o.measure_type \
                    and self.timestamp == __o.timestamp \
                    and self.experiment == __o.experiment \
                    and self.value == __o.value

@@ -44,7 +44,7 @@ class Storage():
 
     def insert_measure(self, measure:Measure) -> None:
         '''Inserts a measure'''
-        self._execute('''INSERT INTO MEASURES 
+        self._execute('''INSERT INTO MEASURES
                       (TYPE, TIMESTAMP, EXPERIMENT_ID, MEASURE_VALUE)
                       VALUES (
                       (SELECT ID FROM MEASURE_TYPES WHERE NAME = %(type)s),
@@ -52,7 +52,7 @@ class Storage():
                       (SELECT ID FROM EXPERIMENTS WHERE NAME = %(experiment)s),
                       %(value)s)''',
                       {
-                          'type': measure.type,
+                          'type': measure.measure_type,
                           'timestamp': measure.timestamp,
                           'experiment': measure.experiment,
                           'value': measure.value
@@ -61,11 +61,10 @@ class Storage():
     def read_measure(self):
         '''returns a measure'''
         #TODO
-        pass
 
     def _execute(self, statement, params):
         """calls the database
-        
+
         Args:
             statement: command to execute
             params: parameters for the command as a dict

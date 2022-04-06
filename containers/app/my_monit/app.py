@@ -66,8 +66,8 @@ def main(rabbit_listener: RabbitListener = Provide[Container.rabbit]):
     thread_rabbit.start()
     thread_rabbit.join()
 
-#if __name__ == "__main__":
 def init():
+    '''initialise the application'''
     container = Container()
 
     # db
