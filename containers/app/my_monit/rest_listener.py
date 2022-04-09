@@ -1,7 +1,6 @@
 '''REST APIs'''
 
 from flask import Flask, request, jsonify
-import json
 
 from .errors import AuthorizationException
 from .measure_service import MeasuresService
@@ -21,7 +20,7 @@ class RestConfiguration():
 class RestListener():
     '''Creates an HTTP listener'''
 
-    def __init__(self, 
+    def __init__(self,
                  configuration:RestConfiguration,
                  experiment_service:ExperimentService,
                  measures_service:MeasuresService) -> None:
@@ -59,18 +58,20 @@ class RestListener():
             '''create a new experiment'''
             #TODO
             user_id = 'S001'
-            self._experiment_service.insert_experiment(experiment_dict = request.json, user_id = user_id)
+            self._experiment_service.insert_experiment(experiment_dict = request.json,
+                                                       user_id = user_id)
             return 'created', 201
 
         @app.errorhandler(AuthorizationException)
-        def handle_authorization_error(e):
+        def handle_authorization_error(exception):
             '''user is not authorized'''
+            print(exception)
             return 'forbidden', 401
 
         @app.errorhandler(Exception)
-        def handle_internal_error(e):
+        def handle_internal_error(exception):
             '''default error handler'''
-            print(e)
+            print(exception)
             return 'internal error', 500
 
         app.run(host = self._configuration.host)

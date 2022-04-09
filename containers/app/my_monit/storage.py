@@ -41,11 +41,12 @@ class Storage():
                                            password = storage_configuration.password,
                                            host = storage_configuration.host,
                                            database = storage_configuration.database)
-    
+
     def read_measure(self, experiment_id:int, page:int, user_id:str):
         '''returns measures'''
         #TODO add pagination
-        cur = self._execute('''SELECT ex.NAME as EXP_NAME, me.TIMESTAMP, me.MEASURE_VALUE, mt.NAME as MSR_TYPE
+        cur = self._execute('''SELECT ex.NAME as EXP_NAME, me.TIMESTAMP,
+                            me.MEASURE_VALUE, mt.NAME as MSR_TYPE
                             FROM MEASURES me, EXPERIMENTS ex, MEASURE_TYPES mt, USER_EXPERIMENTS ue
                             WHERE  me.EXPERIMENT_ID = ex.ID
                             AND mt.ID = me.TYPE
@@ -58,10 +59,7 @@ class Storage():
                                 'user_id': user_id
                             },
                             for_update = False)
-        measures = []
-        for row in cur:
-            measures.append(self._to_measure(row))
-        return measures
+        return [Storage._to_measure(me) for me in cur]
 
     def insert_measure(self, measure:Measure) -> None:
         '''Inserts a measure'''
@@ -79,9 +77,9 @@ class Storage():
                           'value': measure.value
                       })
 
-    def read_experiments(self, user_id:int) -> Experiment:
+    def read_experiments(self, user_id:int):
         '''Retrieves all experiments visible to the user'''
-        cur = self._execute('''SELECT ex.ID, ex.NAME 
+        cur = self._execute('''SELECT ex.ID, ex.NAME
                             FROM EXPERIMENTS ex, USER_EXPERIMENTS ue, USERS us, ROLES ro
                             WHERE us.ROLE = ro.ID
                             AND us.ID=%(user_id)s
@@ -89,15 +87,11 @@ class Storage():
                             OR (ro.NAME = 'ADMIN'))''',
                             { 'user_id': user_id },
                             for_update = False)
-        return [self._to_experiment(ex) for ex in cur]
-        #experiments = []
-        #for row in cur:
-        #    experiments.append(self._to_experiment(row))
-        #return experiments
+        return [Storage._to_experiment(ex) for ex in cur]
 
     def insert_experiment(self, experiment:Experiment) -> None:
         '''inserts an experiment'''
-        self._execute('''INSERT INTO EXPERIMENTS(NAME) VALUES (%(name)s)''', 
+        self._execute('''INSERT INTO EXPERIMENTS(NAME) VALUES (%(name)s)''',
                       { 'name': experiment.name })
 
     def read_user(self, user_id:str, requesting_user_id:str) -> User:
@@ -113,7 +107,7 @@ class Storage():
                             AND us.ID = %(requesting_user_id)s) = 'ADMIN')''',
                             { 'user_id': user_id, 'requesting_user_id': requesting_user_id},
                             for_update = False)
-        return self._to_user(cur)
+        return Storage._to_user(cur)
 
     def user_is_admin(self, user_id:str) -> bool:
         '''true if the user is admin'''
@@ -125,26 +119,29 @@ class Storage():
                             for_update = False)
         return [r[0] for r in cur][0] == 1
 
-    def _to_measure(self, row):
+    @classmethod
+    def _to_measure(cls, row):
         '''parses a row: measure type / timestamp / experiment name / value'''
         return Measure(measure_type = row[0],
                        timestamp = row[1],
                        experiment = row[2],
                        value = row[3])
 
-    def _to_experiment(self, row):
+    @classmethod
+    def _to_experiment(cls, row):
         '''parses a row: id / name'''
-        return Experiment(id = row[0],
+        return Experiment(experiment_id = row[0],
                           name = row[1])
 
-    def _to_user(self, row):
+    @classmethod
+    def _to_user(cls, row):
         '''parses a row: id / name / email / role'''
-        return User(id = row[0], name = row[1], email = row[2], role = row[3])
+        return User(user_id = row[0], name = row[1], email = row[2], role = row[3])
 
     def _execute(self, statement, params, for_update = True):
         '''calls the database'''
         cur = self.cnx.cursor()
         cur.execute(statement, params)
-        if(for_update):
+        if for_update:
             self.cnx.commit()
         return cur

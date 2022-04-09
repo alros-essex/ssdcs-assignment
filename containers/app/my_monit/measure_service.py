@@ -4,7 +4,7 @@ from .storage import Storage
 
 class MeasuresService():
     '''Main service handling measures'''
-    
+
     def __init__(self, storage:Storage) -> None:
         self._storage = storage
 

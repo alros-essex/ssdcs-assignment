@@ -7,7 +7,7 @@ from .model import Experiment
 
 class ExperimentService():
     '''Main service handling experiments'''
-    
+
     def __init__(self, storage:Storage, user_service:UserService) -> None:
         self._storage = storage
         self._user_service = user_service
@@ -18,8 +18,7 @@ class ExperimentService():
 
     def insert_experiment(self, experiment_dict, user_id:str) -> int:
         '''inserts an experiment and returns its id'''
-        if(self._user_service.is_admin(user_id)):
-            experiment = Experiment(id = None, name = experiment_dict['name'])
+        if self._user_service.is_admin(user_id):
+            experiment = Experiment(experiment_id = None, name = experiment_dict['name'])
             return self._storage.insert_experiment(experiment)
-        else:
-            raise AuthorizationException
+        raise AuthorizationException
