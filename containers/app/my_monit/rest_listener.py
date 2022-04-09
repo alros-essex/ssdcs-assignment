@@ -1,8 +1,11 @@
 '''REST APIs'''
 
-from flask import Flask,jsonify
+from flask import Flask, request, jsonify
+import json
 
-from .storage import Storage
+from .errors import AuthorizationException
+from .measure_service import MeasuresService
+from .experiment_service import ExperimentService
 
 class RestConfiguration():
     '''configuration for the REST server'''
@@ -18,9 +21,13 @@ class RestConfiguration():
 class RestListener():
     '''Creates an HTTP listener'''
 
-    def __init__(self, configuration:RestConfiguration, storage:Storage) -> None:
+    def __init__(self, 
+                 configuration:RestConfiguration,
+                 experiment_service:ExperimentService,
+                 measures_service:MeasuresService) -> None:
         self._configuration = configuration
-        self._storage = storage
+        self._experiment_service = experiment_service
+        self._measures_service = measures_service
 
     def run(self):
         '''Main method that runs the listener'''
@@ -29,13 +36,41 @@ class RestListener():
 
         @app.route("/measures/<int:experiment_id>", methods=['GET'])
         def get_measures(experiment_id:int):
+            '''retrieve measures for an experiment'''
             #TODO
             user_id = 'S001'
             #TODO
             page = 1
-            measures = self._storage.read_measure(experiment_id = experiment_id,
-                                                  page = page,
-                                                  user_id = user_id)
-            return jsonify([m.serialize() for m in measures])
+            measures = self._measures_service.retrieve_measures(experiment_id = experiment_id,
+                                                       user_id = user_id,
+                                                       page = page)
+            return jsonify(measures), 200
+
+        @app.route("/experiments/", methods=['GET'])
+        def get_experiments():
+            '''retrieves all experiments'''
+            #TODO
+            user_id = 'S001'
+            experiments = self._experiment_service.retrieve_experiments(user_id = user_id)
+            return jsonify(experiments), 200
+
+        @app.route("/experiments/", methods=['POST'])
+        def post_experiment():
+            '''create a new experiment'''
+            #TODO
+            user_id = 'S001'
+            self._experiment_service.insert_experiment(experiment_dict = request.json, user_id = user_id)
+            return 'created', 201
+
+        @app.errorhandler(AuthorizationException)
+        def handle_authorization_error(e):
+            '''user is not authorized'''
+            return 'forbidden', 401
+
+        @app.errorhandler(Exception)
+        def handle_internal_error(e):
+            '''default error handler'''
+            print(e)
+            return 'internal error', 500
 
         app.run(host = self._configuration.host)

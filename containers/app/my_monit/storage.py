@@ -2,7 +2,7 @@
 
 import mysql.connector
 
-from .model import Measure
+from .model import Measure, Experiment, User
 
 class StorageConfiguration():
     '''Database configuration'''
@@ -60,7 +60,7 @@ class Storage():
                             for_update = False)
         measures = []
         for row in cur:
-            measures.append(self._to_measures(row))
+            measures.append(self._to_measure(row))
         return measures
 
     def insert_measure(self, measure:Measure) -> None:
@@ -79,22 +79,70 @@ class Storage():
                           'value': measure.value
                       })
 
-    def _to_measures(self, row):
+    def read_experiments(self, user_id:int) -> Experiment:
+        '''Retrieves all experiments visible to the user'''
+        cur = self._execute('''SELECT ex.ID, ex.NAME 
+                            FROM EXPERIMENTS ex, USER_EXPERIMENTS ue, USERS us, ROLES ro
+                            WHERE us.ROLE = ro.ID
+                            AND us.ID=%(user_id)s
+                            AND ((us.ID = ue.USER_ID AND ex.ID = ue.EXPERIMENT_ID)
+                            OR (ro.NAME = 'ADMIN'))''',
+                            { 'user_id': user_id },
+                            for_update = False)
+        return [self._to_experiment(ex) for ex in cur]
+        #experiments = []
+        #for row in cur:
+        #    experiments.append(self._to_experiment(row))
+        #return experiments
+
+    def insert_experiment(self, experiment:Experiment) -> None:
+        '''inserts an experiment'''
+        self._execute('''INSERT INTO EXPERIMENTS(NAME) VALUES (%(name)s)''', 
+                      { 'name': experiment.name })
+
+    def read_user(self, user_id:str, requesting_user_id:str) -> User:
+        '''retrieves a user'''
+        cur = self._execute('''SELECT us.ID, us.NAME, us.EMAIL, ro.NAME AS ROLE
+                            FROM USERS us, ROLES ro
+                            WHERE us.ROLE = ro.ID
+                            AND us.ID = %(user_id)s
+                            AND (%(user_id)s = %(requesting_user_id)s OR 
+                            (SELECT ro.NAME 
+                            FROM USERS us, ROLES ro 
+                            WHERE us.ROLE = ro.ID
+                            AND us.ID = %(requesting_user_id)s) = 'ADMIN')''',
+                            { 'user_id': user_id, 'requesting_user_id': requesting_user_id},
+                            for_update = False)
+        return self._to_user(cur)
+
+    def user_is_admin(self, user_id:str) -> bool:
+        '''true if the user is admin'''
+        cur = self._execute('''SELECT ro.NAME = 'ADMIN'
+                            FROM USERS us, ROLES ro 
+                            WHERE us.ROLE = ro.ID
+                            AND us.ID = %(user_id)s''',
+                            { 'user_id': user_id },
+                            for_update = False)
+        return [r[0] for r in cur][0] == 1
+
+    def _to_measure(self, row):
         '''parses a row: measure type / timestamp / experiment name / value'''
         return Measure(measure_type = row[0],
                        timestamp = row[1],
                        experiment = row[2],
                        value = row[3])
 
-    def _execute(self, statement, params, for_update = True):
-        """calls the database
+    def _to_experiment(self, row):
+        '''parses a row: id / name'''
+        return Experiment(id = row[0],
+                          name = row[1])
 
-        Args:
-            statement: command to execute
-            params: parameters for the command as a dict
-        Returns:
-            None
-        """
+    def _to_user(self, row):
+        '''parses a row: id / name / email / role'''
+        return User(id = row[0], name = row[1], email = row[2], role = row[3])
+
+    def _execute(self, statement, params, for_update = True):
+        '''calls the database'''
         cur = self.cnx.cursor()
         cur.execute(statement, params)
         if(for_update):

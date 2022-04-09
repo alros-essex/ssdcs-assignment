@@ -31,6 +31,7 @@ class Measure():
         return self._value
 
     def serialize(self):
+        '''serialize into a dict'''
         return {
             "measure_type": self.measure_type,
             "timestamp": self.timestamp,
@@ -39,6 +40,7 @@ class Measure():
         }
 
     def __eq__(self, __o: object) -> bool:
+        '''equals'''
         if isinstance(__o, Measure):
             return self.measure_type == __o.measure_type \
                    and self.timestamp == __o.timestamp \
@@ -47,4 +49,91 @@ class Measure():
         return False
 
     def __ne__(self, __o: object) -> bool:
+        '''not equals'''
         return not self == __o
+
+class Experiment():
+    '''Models one experiment'''
+
+    def __init__(self, id:int, name:str) -> None:
+        '''creates the instance'''
+        self._id = id
+        self._name = name
+
+    @property
+    def id(self):
+        '''experiment id'''
+        return self._id
+
+    @property
+    def name(self):
+        '''experiment name'''
+        return self._name
+
+    def serialize(self):
+        '''serialize into a dict'''
+        return {
+            "id": self._id,
+            "name": self._name
+        }
+
+    def __eq__(self, __o: object) -> bool:
+        '''equals'''
+        if isinstance(__o, Experiment):
+            return self.id == __o.id \
+                   and self.name == __o.name
+
+    def __ne__(self, __o: object) -> bool:
+        '''not equals'''
+        return not self.__eq__(__o)
+
+class User():
+    '''Models a user'''
+    
+    def __init__(self, id:str, name:str, email:str, role:str) -> None:
+        '''creates the instance'''
+        self._id = id
+        self._name = name
+        self._email = email
+        self._role = role
+
+    @property
+    def id(self):
+        '''user id'''
+        return self._id
+
+    @property
+    def name(self):
+        '''user's name'''
+        return self._name
+
+    @property
+    def email(self):
+        '''user's email'''
+        return self._email
+
+    @property
+    def role(self):
+        '''user's role'''
+        return self._role
+
+    def serialize(self):
+        '''serialize into a dict'''
+        return {
+            "id": self._id,
+            "name": self._name,
+            "email": self._email,
+            "role": self._role
+        }
+
+    def __eq__(self, __o: object) -> bool:
+        '''equals'''
+        if isinstance(__o, User):
+            return self.id == __o.id \
+                   and self.name == __o.name \
+                   and self._email == __o.email \
+                   and self._role == __o._role
+
+    def __ne__(self, __o: object) -> bool:
+        '''not equals'''
+        return not self.__eq__(__o)
