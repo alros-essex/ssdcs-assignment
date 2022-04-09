@@ -6,17 +6,83 @@
 	},
 	"item": [
 		{
-			"name": "get measures",
+			"name": "retrieve measures",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/measures",
+					"raw": "{{url}}/measures/1",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"measures"
+						"measures",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "retrieve experiment",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/experiments",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"experiments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create experiment Copy",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"EXP0001\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/experiments",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"experiments"
 					]
 				}
 			},

@@ -4,7 +4,10 @@ import threading
 from dependency_injector.wiring import Provide, inject
 from dependency_injector import containers, providers
 
+from .user_service import UserService
 from .rabbit_listener import RabbitListener, RabbitConfiguration, RabbitMessageProcessor
+from .experiment_service import ExperimentService
+from .measure_service import MeasuresService
 from .storage import Storage, StorageConfiguration
 from .rest_listener import RestListener, RestConfiguration
 
@@ -52,10 +55,27 @@ class Container(containers.DeclarativeContainer):
         message_processor = message_processor
     )
 
+    user_service = providers.Singleton(
+        UserService,
+        storage = storage
+    )
+
+    experiment_service = providers.Singleton(
+        ExperimentService,
+        storage = storage,
+        user_service = user_service
+    )
+
+    measures_service = providers.Singleton(
+        MeasuresService,
+        storage = storage
+    )
+
     rest = providers.Singleton(
         RestListener,
         configuration = rest_configuration,
-        storage = storage
+        experiment_service = experiment_service,
+        measures_service = measures_service
     )
 
 @inject
