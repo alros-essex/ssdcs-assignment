@@ -8,9 +8,9 @@ class MeasuresService():
     def __init__(self, storage:Storage) -> None:
         self._storage = storage
 
-    def retrieve_measures(self, experiment_id:int, user_id:str, page:int):
+    def retrieve_measures(self, experiment_id:int, current_user:str, page:int):
         '''Returns an array of measures'''
         measures = self._storage.read_measure(experiment_id = experiment_id,
                                               page = page,
-                                              user_id = user_id)
+                                              current_user = current_user)
         return [m.serialize() for m in measures]

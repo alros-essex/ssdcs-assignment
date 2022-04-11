@@ -3,6 +3,7 @@
 import mysql.connector
 
 from .model import Measure, Experiment, User
+from .errors import DbIntegrityError
 
 class StorageConfiguration():
     '''Database configuration'''
@@ -42,7 +43,9 @@ class Storage():
                                            host = storage_configuration.host,
                                            database = storage_configuration.database)
 
-    def read_measure(self, experiment_id:int, page:int, user_id:str):
+    # Measures
+
+    def read_measure(self, experiment_id:int, page:int, current_user:str):
         '''returns measures'''
         #TODO add pagination
         cur = self._execute('''SELECT ex.NAME as EXP_NAME, me.TIMESTAMP,
@@ -56,7 +59,7 @@ class Storage():
                             ORDER BY TIMESTAMP DESC''',
                             {
                                 'experiment_id': experiment_id,
-                                'user_id': user_id
+                                'user_id': current_user
                             },
                             for_update = False)
         return [Storage._to_measure(me) for me in cur]
@@ -77,7 +80,9 @@ class Storage():
                           'value': measure.value
                       })
 
-    def read_experiments(self, user_id:int):
+    # Experiments
+
+    def read_experiments(self, current_user:int):
         '''Retrieves all experiments visible to the user'''
         cur = self._execute('''SELECT ex.ID, ex.NAME
                             FROM EXPERIMENTS ex, USER_EXPERIMENTS ue, USERS us, ROLES ro
@@ -85,7 +90,7 @@ class Storage():
                             AND us.ID=%(user_id)s
                             AND ((us.ID = ue.USER_ID AND ex.ID = ue.EXPERIMENT_ID)
                             OR (ro.NAME = 'ADMIN'))''',
-                            { 'user_id': user_id },
+                            { 'user_id': current_user },
                             for_update = False)
         return [Storage._to_experiment(ex) for ex in cur]
 
@@ -94,7 +99,9 @@ class Storage():
         self._execute('''INSERT INTO EXPERIMENTS(NAME) VALUES (%(name)s)''',
                       { 'name': experiment.name })
 
-    def read_user(self, user_id:str, requesting_user_id:str) -> User:
+    # Users
+
+    def read_user(self, user_id:str, current_user:str) -> User:
         '''retrieves a user'''
         cur = self._execute('''SELECT us.ID, us.NAME, us.EMAIL, ro.NAME AS ROLE
                             FROM USERS us, ROLES ro
@@ -105,9 +112,15 @@ class Storage():
                             FROM USERS us, ROLES ro 
                             WHERE us.ROLE = ro.ID
                             AND us.ID = %(requesting_user_id)s) = 'ADMIN')''',
-                            { 'user_id': user_id, 'requesting_user_id': requesting_user_id},
+                            { 'user_id': user_id, 'requesting_user_id': current_user},
                             for_update = False)
         return Storage._to_user(cur)
+
+    def read_users(self):
+        cur = self._execute('''SELECT us.ID, us.NAME, us.EMAIL, ro.NAME
+                            FROM USERS us, ROLES ro
+                            WHERE us.ROLE = ro.ID''', {}, for_update = False)
+        return [self._to_user(u) for u in cur]
 
     def user_is_admin(self, user_id:str) -> bool:
         '''true if the user is admin'''
@@ -141,7 +154,11 @@ class Storage():
     def _execute(self, statement, params, for_update = True):
         '''calls the database'''
         cur = self.cnx.cursor()
-        cur.execute(statement, params)
+        try:
+            cur.execute(statement, params)
+        except mysql.connector.IntegrityError as exception:
+            #TODO proper logging
+            raise DbIntegrityError
         if for_update:
             self.cnx.commit()
         return cur
