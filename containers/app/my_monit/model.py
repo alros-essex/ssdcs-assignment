@@ -89,12 +89,23 @@ class Experiment():
 class User():
     '''Models a user'''
 
-    def __init__(self, user_id:str, name:str, email:str, role:str) -> None:
+    def __init__(self, user_id:str, name:str, username:str, email:str, role:str) -> None:
         '''creates the instance'''
         self._user_id = user_id
         self._name = name
+        self._username = username
         self._email = email
         self._role = role
+
+    def is_valid(self) -> bool:
+        '''true is the entity is valid'''
+        def is_not_blank(string):
+            return string and string.strip()
+        return is_not_blank(self.user_id) \
+               and is_not_blank(self.name) \
+               and is_not_blank(self.username) \
+               and is_not_blank(self.email) \
+               and is_not_blank(self.role)
 
     @property
     def user_id(self):
@@ -105,6 +116,11 @@ class User():
     def name(self):
         '''user's name'''
         return self._name
+
+    @property
+    def username(self):
+        '''user's username'''
+        return self._username
 
     @property
     def email(self):
@@ -121,6 +137,7 @@ class User():
         return {
             "user_id": self._user_id,
             "name": self._name,
+            "username": self._username,
             "email": self._email,
             "role": self._role
         }
@@ -130,6 +147,7 @@ class User():
         return isinstance(__o, User) and \
                self.user_id == __o.user_id \
                and self.name == __o.name \
+               and self.username == __o.username \
                and self._email == __o.email \
                and self._role == __o._role
 

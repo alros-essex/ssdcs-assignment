@@ -12,13 +12,13 @@ class ExperimentService():
         self._storage = storage
         self._user_service = user_service
 
-    def retrieve_experiments(self, user_id:str):
+    def retrieve_experiments(self, current_user:str):
         '''returns all experiments'''
-        return [e.serialize() for e in self._storage.read_experiments(user_id = user_id)]
+        return [e.serialize() for e in self._storage.read_experiments(current_user = current_user)]
 
-    def insert_experiment(self, experiment_dict, user_id:str) -> int:
-        '''inserts an experiment and returns its id'''
-        if self._user_service.is_admin(user_id):
+    def insert_experiment(self, experiment_dict, current_user:str) -> int:
+        '''inserts an experiment'''
+        if self._user_service.is_admin(current_user):
             experiment = Experiment(experiment_id = None, name = experiment_dict['name'])
             return self._storage.insert_experiment(experiment)
         raise AuthorizationException

@@ -75,7 +75,8 @@ class Container(containers.DeclarativeContainer):
         RestListener,
         configuration = rest_configuration,
         experiment_service = experiment_service,
-        measures_service = measures_service
+        measures_service = measures_service,
+        user_service = user_service
     )
 
 @inject
