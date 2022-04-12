@@ -17,7 +17,7 @@ class ExperimentService():
         return [e.serialize() for e in self._storage.read_experiments(current_user = current_user)]
 
     def insert_experiment(self, experiment_dict, current_user:str) -> int:
-        '''inserts an experiment and returns its id'''
+        '''inserts an experiment'''
         if self._user_service.is_admin(current_user):
             experiment = Experiment(experiment_id = None, name = experiment_dict['name'])
             return self._storage.insert_experiment(experiment)

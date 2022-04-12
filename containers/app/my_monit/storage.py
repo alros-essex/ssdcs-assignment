@@ -103,7 +103,7 @@ class Storage():
 
     def read_user(self, user_id:str, current_user:str) -> User:
         '''retrieves a user'''
-        cur = self._execute('''SELECT us.ID, us.NAME, us.EMAIL, ro.NAME AS ROLE
+        cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME AS ROLE
                             FROM USERS us, ROLES ro
                             WHERE us.ROLE = ro.ID
                             AND us.ID = %(user_id)s
@@ -116,8 +116,20 @@ class Storage():
                             for_update = False)
         return Storage._to_user(cur)
 
+    def insert_user(self, user:User):
+        self._execute('''INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, ROLE)
+                      VALUES(%(id)s, %(name)s, %(username)s, %(email)s,
+                      (SELECT ID FROM ROLES WHERE NAME = %(role)s))''',
+                      {
+                          'id': user.user_id,
+                          'name': user.name,
+                          'username': user.username,
+                          'email': user.email,
+                          'role': user.role
+                      })
+
     def read_users(self):
-        cur = self._execute('''SELECT us.ID, us.NAME, us.EMAIL, ro.NAME
+        cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
                             FROM USERS us, ROLES ro
                             WHERE us.ROLE = ro.ID''', {}, for_update = False)
         return [self._to_user(u) for u in cur]
@@ -148,8 +160,12 @@ class Storage():
 
     @classmethod
     def _to_user(cls, row):
-        '''parses a row: id / name / email / role'''
-        return User(user_id = row[0], name = row[1], email = row[2], role = row[3])
+        '''parses a row: id / name / username / email / role'''
+        return User(user_id = row[0],
+                    name = row[1],
+                    username = row[2],
+                    email = row[3],
+                    role = row[4])
 
     def _execute(self, statement, params, for_update = True):
         '''calls the database'''

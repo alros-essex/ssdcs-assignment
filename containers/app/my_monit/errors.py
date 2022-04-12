@@ -5,3 +5,6 @@ class AuthorizationException(Exception):
 
 class DbIntegrityError(Exception):
     '''Integrity violation on db'''
+
+class InvalidArgument(Exception):
+    '''The input is invalid'''

@@ -2,7 +2,7 @@
 
 from flask import Flask, request, jsonify
 
-from .errors import AuthorizationException, DbIntegrityError
+from .errors import AuthorizationException, DbIntegrityError, InvalidArgument
 from .measure_service import MeasuresService
 from .experiment_service import ExperimentService
 from .user_service import UserService
@@ -75,25 +75,39 @@ class RestListener():
             users = self._user_service.retrieve_users(user_id)
             return jsonify(users), 200
 
+        @app.route("/users/", methods=['POST'])
+        def create_users():
+            '''creates a user'''
+            user_id = get_user()
+            self._user_service.insert_user(current_user = user_id,
+                                                   user_dict = request.json)
+            return 'created', 201
+
         # Utilities
+
+        def handle(exception, msg, status):
+            print(exception)
+            return msg, status
 
         @app.errorhandler(AuthorizationException)
         def handle_authorization_error(exception):
             '''user is not authorized'''
-            print(exception)
-            return 'forbidden', 401
+            return handle(exception, 'forbidden', 401)
 
         @app.errorhandler(DbIntegrityError)
         def handle_db_integrity_error(exception):
             '''some db constrain was violated'''
-            print(exception)
-            return 'bad request', 400
+            return handle(exception, 'bad request', 400)
+        
+        @app.errorhandler(InvalidArgument)
+        def handle_invalid_argument(exception):
+            '''input is invalid'''
+            return handle(exception, 'bad request', 400)
 
         @app.errorhandler(Exception)
         def handle_internal_error(exception):
             '''default error handler'''
-            print(exception)
-            return 'internal error', 500
+            return handle(exception, 'internal error', 500)
 
         def get_user():
             #TODO
