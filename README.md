@@ -88,3 +88,14 @@ curl --location --request GET 'http://localhost:5000/measures/1'
 ```
 
 Please note that there is hardcoded data in the db (for testing)
+
+### 🌐 How to work on statics 🌐
+
+start infra and flask
+
+```bash
+./runInfra.sh
+./runFlask.sh
+```
+
+the statics are in [static](static) (currently they are just placeholders 💩)
