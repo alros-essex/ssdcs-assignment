@@ -87,7 +87,7 @@ insert data by typing in the adapter's console (push return) and retrieve data w
 curl --location --request GET 'http://localhost:5000/measures/1'
 ```
 
-Please note that there is hardcoded data in the db (for testing)
+Please note that there is hardcoded data in the db (for testing)ng 
 
 ### 🌐 How to work on statics 🌐
 
