@@ -36,6 +36,15 @@ class RestListener():
 
         app = Flask('safe repository')
 
+           # Login
+        
+        @app.route("/login/", methods=['POST'])
+        def create_login_user():
+            '''logging in'''
+            print(request.form)
+                                                
+            return 'created', 201
+
         # Measures
 
         @app.route("/measures/<int:experiment_id>", methods=['GET'])
@@ -116,3 +125,6 @@ class RestListener():
         # App
 
         app.run(host = self._configuration.host)
+
+      
+

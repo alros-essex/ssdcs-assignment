@@ -13,4 +13,3 @@ export interface Measure{
     measure_value: number;  
   }
 
-  

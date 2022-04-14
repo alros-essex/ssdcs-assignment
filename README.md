@@ -44,7 +44,7 @@
 
 to start the complete deployment: `./run.sh`
 
-to deploy only RabbitMQ and MySQL: `./runInfra.sh`
+to deploy only RabbitMQ and MySQL: `./run-infra.sh`
 
 ### Python projects
 
