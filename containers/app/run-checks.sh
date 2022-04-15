@@ -14,7 +14,6 @@ pytest --cov=my_monit test
 coverage report -m
 coverage html
 rm .coverage
-
 mv htmlcov $FOLDER/cov
 
 # run bandit
@@ -23,4 +22,4 @@ bandit --ini .bandit -r > $FOLDER/bandit.txt
 
 # run pylint
 pip3 install pylint
-pylint my_monit > reports/pylint.txt
+pylint --rcfile=pylintrc my_monit > reports/pylint.txt
