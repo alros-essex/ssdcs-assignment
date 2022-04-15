@@ -16,5 +16,5 @@ setup(
         "python-logstash >= 0.4.6",
         "dependency_injector >= 4.39.1"
     ],
-    python_requires='>=3.6'
+    python_requires='>=3.9'
 )
