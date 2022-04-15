@@ -6,6 +6,8 @@ from .errors import AuthorizationException, DbIntegrityError, InvalidArgument
 from .measure_service import MeasuresService
 from .experiment_service import ExperimentService
 from .user_service import UserService
+from flask_cors import CORS, cross_origin
+
 
 class RestConfiguration():
     '''configuration for the REST server'''
@@ -36,12 +38,18 @@ class RestListener():
 
         app = Flask('safe repository')
 
+        cors = CORS(app)
+        app.config['CORS_HEADERS'] = 'Content-Type'
+       
+
+
+
            # Login
         
         @app.route("/login/", methods=['POST'])
         def create_login_user():
             '''logging in'''
-            print(request.form)
+            print(request)
                                                 
             return 'created', 201
 
@@ -61,6 +69,7 @@ class RestListener():
         # Experiments
 
         @app.route("/experiments/", methods=['GET'])
+        @cross_origin()
         def get_experiments():
             '''retrieves all experiments'''
             user_id = get_user()
@@ -68,6 +77,7 @@ class RestListener():
             return jsonify(experiments), 200
 
         @app.route("/experiments/", methods=['POST'])
+        @cross_origin()
         def post_experiment():
             '''create a new experiment'''
             user_id = get_user()
