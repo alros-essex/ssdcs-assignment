@@ -1,0 +1,3 @@
+[bandit]
+targets = my_monit/
+recursive = true

@@ -1,3 +1,4 @@
 .~lock*
 **/*.egg*
 containers/app/build
+containers/app/reports
