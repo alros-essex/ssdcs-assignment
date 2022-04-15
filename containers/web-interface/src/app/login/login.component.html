@@ -2,14 +2,16 @@
 <h1>
     Login to safe repository
 </h1>
-
-<form action="http://localhost:5000/login" method="POST">
+<div *ngIf="login">
 
     <label for="username">Username: </label>
-    <input type="text" id="username" name="username"><br><br>
+    <input type="text" id="username" name="username" [(ngModel)]="login.username" placeholder="{{login.username}}"><br><br> 
     <label for="password">Password: </label>
-    <input type="text" id="password" name="password"><br><br>
-    <button type="submit" value="Login">
-  </form>
+    <input type="text" id="password" name="password" [(ngModel)]="login.password" placeholder="{{login.username}}"><br><br>
+   
+    <button type="button" value="Login" (click)="dologin()">login</button>
+
+</div>
+    
 
 <html>

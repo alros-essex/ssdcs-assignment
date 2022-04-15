@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RestClientService } from '../rest-client.service';
-import { Measure } from '../measure/measure';
+import { Measure } from '../measure';
 
 @Component({
   selector: 'app-users',
