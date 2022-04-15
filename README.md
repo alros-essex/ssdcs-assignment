@@ -54,6 +54,10 @@ run the tests with `python3 setup.py test`
 
 start it with `python3 main.py` (adapters use different names)
 
+### Code quality
+
+`containers/app/run-checks.sh` runs `pylint`, `cov`, and `bandit` generating reports in `containers/app/reports`
+
 #### Pylint
 
 rules from https://github.com/google/styleguide
