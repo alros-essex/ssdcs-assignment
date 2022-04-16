@@ -1,6 +1,7 @@
 '''REST APIs'''
 
 from flask import Flask, request, jsonify
+import jwt
 
 from .errors import AuthorizationException, DbIntegrityError, InvalidArgument
 from .measure_service import MeasuresService
@@ -44,6 +45,14 @@ class RestListener():
             print(request)
                                                 
             return 'created', 201
+
+        @app.route("/authenticate", methods=['POST'])
+        def authenticate():
+            '''returns a jwt token'''
+            user = request.json['username']
+            # TODO replace the secret
+            token = { "token": jwt.encode({"username": user}, "secret", algorithm="HS256") }
+            return jsonify(token), 200
 
         # Measures
 
@@ -119,8 +128,9 @@ class RestListener():
             return handle(exception, 'internal error', 500)
 
         def get_user():
-            #TODO
-            return 'A001'
+            token = request.headers['Authorization'].split()[1]
+            decoded = jwt.decode(token, "secret", algorithms=["HS256"])
+            return decoded['username']
 
         # App
 
