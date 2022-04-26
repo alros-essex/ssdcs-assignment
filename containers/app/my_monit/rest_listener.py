@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 import jwt
 
 from .errors import AuthorizationException, DbIntegrityError, InvalidArgument
+from .logging import Logging
 from .measure_service import MeasuresService
 from .experiment_service import ExperimentService
 from .user_service import UserService
@@ -26,11 +27,13 @@ class RestListener():
                  configuration:RestConfiguration,
                  experiment_service:ExperimentService,
                  measures_service:MeasuresService,
-                 user_service:UserService) -> None:
+                 user_service:UserService,
+                 logging: Logging) -> None:
         self._configuration = configuration
         self._experiment_service = experiment_service
         self._measures_service = measures_service
         self._user_service = user_service
+        self._logging = logging
 
     def run(self):
         '''Main method that runs the listener'''
@@ -90,6 +93,11 @@ class RestListener():
         def get_users():
             '''retrieves all users'''
             user_id = get_user()
+            self._logging.info(f'called API', metadata = {
+                'api': '/users/',
+                'method': 'GET',
+                'user': user_id
+            })
             users = self._user_service.retrieve_users(user_id)
             return jsonify(users), 200
 
@@ -130,7 +138,8 @@ class RestListener():
         def get_user():
             token = request.headers['Authorization'].split()[1]
             decoded = jwt.decode(token, "secret", algorithms=["HS256"])
-            return decoded['username']
+            username = decoded['username']
+            return username
 
         # App
 

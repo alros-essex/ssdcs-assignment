@@ -14,7 +14,15 @@ from .rest_listener import RestListener, RestConfiguration
 class Container(containers.DeclarativeContainer):
     '''main configuration'''
 
+    #from .logging import Logging
+
     config = providers.Configuration()
+
+    #logging = providers.Singleton(
+    #    Logging,
+    #    host = config.logstash_host,
+    #    port = config.logstash_port
+    #)
 
     storage_configuration = providers.Singleton(
         StorageConfiguration,
@@ -111,7 +119,9 @@ def init():
     container.config.rabbit_queue.from_env("RABBIT_QUEUE", default = 'measures', as_= str)
     # rest
     container.config.rest_host.from_env("REST_HOST", default = "0.0.0.0", as_ = str)
-    #
+    # logstash
+    container.config.logstash_host.from_env("LOGSTASH_HOST", default = 'logstash', as_ = str)
+    container.config.logstash_port.from_env("LOGSTASH_PORT", default = 5959, as_ = int)
 
     container.wire(modules=[__name__])
 
