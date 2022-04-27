@@ -63,6 +63,14 @@ class RestListener():
         def get_measures(experiment_id:int):
             '''retrieve measures for an experiment'''
             user_id = get_user()
+            self._logging.info(f'called API', metadata = {
+                'service': 'RestListener',
+                'api': '/measures/<int:experiment_id>',
+                'method': 'GET',
+                'user': user_id,
+                'experiment_id': experiment_id
+            })
+
             #TODO
             page = 1
             measures = self._measures_service.retrieve_measures(experiment_id = experiment_id,
@@ -76,6 +84,12 @@ class RestListener():
         def get_experiments():
             '''retrieves all experiments'''
             user_id = get_user()
+            self._logging.info(f'called API', metadata = {
+                'service': 'RestListener',
+                'api': '/experiments/',
+                'method': 'GET',
+                'user': user_id
+            })
             experiments = self._experiment_service.retrieve_experiments(current_user = user_id)
             return jsonify(experiments), 200
 
@@ -83,6 +97,12 @@ class RestListener():
         def post_experiment():
             '''create a new experiment'''
             user_id = get_user()
+            self._logging.info(f'called API', metadata = {
+                'service': 'RestListener',
+                'api': '/experiments/',
+                'method': 'POST',
+                'user': user_id
+            })
             self._experiment_service.insert_experiment(experiment_dict = request.json,
                                                        current_user = user_id)
             return 'created', 201
@@ -94,6 +114,7 @@ class RestListener():
             '''retrieves all users'''
             user_id = get_user()
             self._logging.info(f'called API', metadata = {
+                'service': 'RestListener',
                 'api': '/users/',
                 'method': 'GET',
                 'user': user_id
@@ -105,6 +126,12 @@ class RestListener():
         def create_users():
             '''creates a user'''
             user_id = get_user()
+            self._logging.info(f'called API', metadata = {
+                'service': 'RestListener',
+                'api': '/users/',
+                'method': 'POST',
+                'user': user_id
+            })
             self._user_service.insert_user(current_user = user_id,
                                                    user_dict = request.json)
             return 'created', 201
@@ -118,21 +145,41 @@ class RestListener():
         @app.errorhandler(AuthorizationException)
         def handle_authorization_error(exception):
             '''user is not authorized'''
+            self._logging.warn(f'exception in rest call', metadata = {
+                'service': 'RestListener',
+                'exception': str(exception),
+                'httpstatus': 401
+            })
             return handle(exception, 'forbidden', 401)
 
         @app.errorhandler(DbIntegrityError)
         def handle_db_integrity_error(exception):
             '''some db constrain was violated'''
+            self._logging.warn(f'exception in rest call', metadata = {
+                'service': 'RestListener',
+                'exception': str(exception),
+                'httpstatus': 400
+            })
             return handle(exception, 'bad request', 400)
         
         @app.errorhandler(InvalidArgument)
         def handle_invalid_argument(exception):
             '''input is invalid'''
+            self._logging.warn(f'exception in rest call', metadata = {
+                'service': 'RestListener',
+                'exception': str(exception),
+                'httpstatus': 400
+            })
             return handle(exception, 'bad request', 400)
 
         @app.errorhandler(Exception)
         def handle_internal_error(exception):
             '''default error handler'''
+            self._logging.error(f'exception in rest call', metadata = {
+                'service': 'RestListener',
+                'exception': str(exception),
+                'httpstatus': 500
+            })
             return handle(exception, 'internal error', 500)
 
         def get_user():

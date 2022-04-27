@@ -53,13 +53,15 @@ class Container(containers.DeclarativeContainer):
 
     message_processor = providers.Singleton(
         RabbitMessageProcessor,
-        storage = storage
+        storage = storage,
+        logging = logging
     )
 
     rabbit = providers.Singleton(
         RabbitListener,
         configuration = rabbit_configuration,
-        message_processor = message_processor
+        message_processor = message_processor,
+        logging = logging
     )
 
     user_service = providers.Singleton(
