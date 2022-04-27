@@ -1,4 +1,6 @@
 from enum import Enum
+import logging
+import logstash
 import sys
 
 class LoggingLevel(Enum):
@@ -11,14 +13,11 @@ class LoggingLevel(Enum):
 class Logging():
     
     def __init__(self, host:str, port:int) -> None:
-        #import logging
-        #import logstash
-
-        #logger = logging.getLogger('python-logstash-logger')
-        #logger.setLevel(logging.INFO)
+        logger = logging.getLogger('python-logstash-logger')
+        logger.setLevel(logging.INFO)
         #logger.addHandler(logstash.LogstashHandler(host, port, version=1))
-        #self._logger = logger
-        pass
+        logger.addHandler(logstash.TCPLogstashHandler(host, port, version=1))
+        self._logger = logger
 
     def debug(self, msg:str, metadata) -> None:
         '''information useful to debug the application'''
