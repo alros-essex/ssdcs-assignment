@@ -10,11 +10,18 @@ from .experiment_service import ExperimentService
 from .measure_service import MeasuresService
 from .storage import Storage, StorageConfiguration
 from .rest_listener import RestListener, RestConfiguration
+from .logging import Logging
 
 class Container(containers.DeclarativeContainer):
     '''main configuration'''
 
     config = providers.Configuration()
+
+    logging = providers.Singleton(
+        Logging,
+        host = config.logstash_host,
+        port = config.logstash_port
+    )
 
     storage_configuration = providers.Singleton(
         StorageConfiguration,
@@ -46,13 +53,15 @@ class Container(containers.DeclarativeContainer):
 
     message_processor = providers.Singleton(
         RabbitMessageProcessor,
-        storage = storage
+        storage = storage,
+        logging = logging
     )
 
     rabbit = providers.Singleton(
         RabbitListener,
         configuration = rabbit_configuration,
-        message_processor = message_processor
+        message_processor = message_processor,
+        logging = logging
     )
 
     user_service = providers.Singleton(
@@ -76,7 +85,8 @@ class Container(containers.DeclarativeContainer):
         configuration = rest_configuration,
         experiment_service = experiment_service,
         measures_service = measures_service,
-        user_service = user_service
+        user_service = user_service,
+        logging = logging
     )
 
 @inject
@@ -111,7 +121,9 @@ def init():
     container.config.rabbit_queue.from_env("RABBIT_QUEUE", default = 'measures', as_= str)
     # rest
     container.config.rest_host.from_env("REST_HOST", default = "0.0.0.0", as_ = str)
-    #
+    # logstash
+    container.config.logstash_host.from_env("LOGSTASH_HOST", default = 'localhost', as_ = str)
+    container.config.logstash_port.from_env("LOGSTASH_PORT", default = 5959, as_ = int)
 
     container.wire(modules=[__name__])
 

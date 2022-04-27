@@ -4,6 +4,20 @@ services:
   app:
     image: safe_repository:latest
     container_name: app
+    environment:
+    - DB_USER=root
+    - DB_PASSWORD=password
+    - DB_HOST=mysql
+    - DB_DATABASE=my_monit
+    - RABBIT_URL=rabbit
+    - RABBIT_USER=guest
+    - RABBIT_PASSWORD=guest
+    - RABBIT_EXCHANGE=mymonit
+    - RABBIT_ROUTING=measures
+    - RABBIT_QUEUE=measures
+    - REST_HOST=0.0.0.0
+    - LOGSTASH_HOST=logstash
+    - LOGSTASH_PORT=5959
     depends_on:
       - elasticsearch
       - rabbit
