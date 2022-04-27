@@ -1,7 +1,9 @@
 FROM python:3.9
 
-COPY setup.py /home/
-COPY my_monit/*.py /home/
+COPY setup.* /home/
+COPY main.py /home/
+COPY .bandit /home/
+COPY my_monit/*.py /home/my_monit/
 WORKDIR /home
 RUN pip3 install flask pika mysql-connector-python python-logstash dependency_injector pyjwt
 
@@ -12,4 +14,4 @@ RUN pip3 install flask pika mysql-connector-python python-logstash dependency_in
 # COPY docker-entrypoint.sh /
 # RUN chmod a+x /filebeat-restart.sh && chmod a+x /docker-entrypoint.sh
 
-ENTRYPOINT python3 app.py
+ENTRYPOINT python3 main.py

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BUILD_NGINX=`true`
+BUILD_NGINX=`false`
 BUILD_APP=`true`
 
 if $BUILD_NGINX
