@@ -27,6 +27,9 @@ class TestRabbitListener(unittest.TestCase):
         # rabbit's channel
         self.channel = Mock()
 
+        # logging
+        self.logging = Mock()
+
         # connection
         self.connection = Mock()
         # make it return the channel
@@ -48,7 +51,9 @@ class TestRabbitListener(unittest.TestCase):
         self.message_processor = Mock()
 
         # create listener with mocked processor
-        self.rabbit_listener = RabbitListener(self.configuration, self.message_processor)
+        self.rabbit_listener = RabbitListener(self.configuration,
+                                              self.message_processor,
+                                              logging = self.logging)
 
         # mock the storage
         self.storage = Mock()
@@ -85,7 +90,7 @@ class TestRabbitListener(unittest.TestCase):
     def test_processor(self):
         '''test the processor'''
 
-        processor = RabbitMessageProcessor(storage = self.storage)
+        processor = RabbitMessageProcessor(storage = self.storage, logging = self.logging)
         data = {
             'experiment': 'exp',
             'measure': 'hertz',
