@@ -1,17 +1,20 @@
+'''Logging / Auditing'''
+
 from enum import Enum
 import logging
 import logstash
 import sys
 
 class LoggingLevel(Enum):
-    DEBUG = 'DEBUG',
-    INFO = 'INFO',
-    WARN = 'WARN',
-    ERROR = 'ERROR',
+    DEBUG = 'DEBUG'
+    INFO = 'INFO'
+    WARN = 'WARN'
+    ERROR = 'ERROR'
     CRITICAL = 'CRITICAL'
 
 class Logging():
-    
+    '''Logging business logic'''
+
     def __init__(self, host:str, port:int) -> None:
         logger = logging.getLogger('python-logstash-logger')
         logger.setLevel(logging.INFO)
@@ -30,7 +33,7 @@ class Logging():
     def warn(self, msg:str, metadata) -> None:
         '''abnomal behaviour that does not cause failure'''
         self.log(msg, metadata, LoggingLevel.WARN)
-        
+
     def error(self, msg:str, metadata) -> None:
         '''errors are unrecoverable and cause the failure of the operation'''
         self.log(msg, metadata, LoggingLevel.ERROR)

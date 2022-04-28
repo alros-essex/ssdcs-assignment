@@ -114,7 +114,8 @@ class Storage():
                             AND us.ID = %(requesting_user_id)s) = 'ADMIN')''',
                             { 'user_id': user_id, 'requesting_user_id': current_user},
                             for_update = False)
-        return Storage._to_user(cur)
+        users = [Storage._to_user(u) for u in cur]
+        return users[0] if len(users)>0 else None
 
     def insert_user(self, user:User):
         self._execute('''INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, ROLE)
@@ -128,10 +129,39 @@ class Storage():
                           'role': user.role
                       })
 
+    def update_user(self, user:User):
+        self._execute('''UPDATE USERS SET
+                      NAME = %(name)s,
+                      EMAIL = %(email)s,
+                      USERNAME = %(username)s
+                      WHERE ID = %(id)s''',
+                      {
+                          'id': user.user_id,
+                          'name': user.name,
+                          'email': user.email,
+                          'username': user.username
+                      })
+
     def read_users(self):
         cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
                             FROM USERS us, ROLES ro
                             WHERE us.ROLE = ro.ID''', {}, for_update = False)
+        return [self._to_user(u) for u in cur]
+
+    def read_users_by_username(self, username:str):
+        cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
+                            FROM USERS us, ROLES ro
+                            WHERE us.ROLE = ro.ID AND us.USERNAME = %(username)s''',
+                            { 'username': username },
+                            for_update = False)
+        return [self._to_user(u) for u in cur]
+
+    def read_users_by_email(self, email:str):
+        cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
+                            FROM USERS us, ROLES ro
+                            WHERE us.ROLE = ro.ID AND us.EMAIL = %(email)s''',
+                            { 'email': email },
+                            for_update = False)
         return [self._to_user(u) for u in cur]
 
     def user_is_admin(self, user_id:str) -> bool:

@@ -77,7 +77,7 @@ class RabbitConnector():
         while True:
             try:
                 return pika.BlockingConnection(pika.ConnectionParameters(configuration.url))
-            except Exception as _error:
+            except Exception as error:
                 time.sleep(5)
 
 class RabbitMessageProcessor():
@@ -103,7 +103,7 @@ class RabbitMessageProcessor():
 class RabbitListener():
     '''Listens to RabbitMQ and processes messages'''
 
-    def __init__(self, configuration:RabbitConfiguration, 
+    def __init__(self, configuration:RabbitConfiguration,
                  message_processor:RabbitMessageProcessor,
                  logging: Logging) -> None:
         self._configuration = configuration
@@ -118,7 +118,7 @@ class RabbitListener():
                 'queue': self._configuration.queue,
                 'routing': self._configuration.routing
         }
-        self._logging.info(f'connect to RabbitMQ: in progress', metadata = metadata)
+        self._logging.info('connect to RabbitMQ: in progress', metadata = metadata)
         connection = RabbitConnector.connect(self._configuration)
         channel = connection.channel()
 
@@ -137,6 +137,6 @@ class RabbitListener():
         channel.basic_consume(queue = self._configuration.queue,
                               auto_ack = True,
                               on_message_callback=self._message_processor.process)
-        self._logging.info(f'connect to RabbitMQ: completed', metadata = metadata)
+        self._logging.info('connect to RabbitMQ: completed', metadata = metadata)
 
         channel.start_consuming()

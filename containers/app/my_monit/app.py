@@ -108,22 +108,22 @@ def init():
     container = Container()
 
     # db
-    container.config.db_user.from_env("DB_USER", default = 'root', as_ = str)
-    container.config.db_password.from_env("DB_PASSWORD", default = 'password', as_ = str)
-    container.config.db_host.from_env("DB_HOST", default = 'localhost', as_ = str)
-    container.config.db_database.from_env("DB_DATABASE", 'my_monit', as_ = str)
+    container.config.db_user.from_env('DB_USER', default = 'root', as_ = str)
+    container.config.db_password.from_env('DB_PASSWORD', default = 'password', as_ = str)
+    container.config.db_host.from_env('DB_HOST', default = 'localhost', as_ = str)
+    container.config.db_database.from_env('DB_DATABASE', 'my_monit', as_ = str)
     # rabbit
-    container.config.rabbit_url.from_env("RABBIT_URL", default = 'localhost', as_= str)
-    container.config.rabbit_user.from_env("RABBIT_USER", default = 'guest', as_= str)
-    container.config.rabbit_password.from_env("RABBIT_PASSWORD", default = 'guest', as_= str)
-    container.config.rabbit_exchange.from_env("RABBIT_EXCHANGE", default = 'mymonit', as_= str)
-    container.config.rabbit_routing.from_env("RABBIT_ROUTING", default = 'measures', as_= str)
-    container.config.rabbit_queue.from_env("RABBIT_QUEUE", default = 'measures', as_= str)
+    container.config.rabbit_url.from_env('RABBIT_URL', default = 'localhost', as_= str)
+    container.config.rabbit_user.from_env('RABBIT_USER', default = 'guest', as_= str)
+    container.config.rabbit_password.from_env('RABBIT_PASSWORD', default = 'guest', as_= str)
+    container.config.rabbit_exchange.from_env('RABBIT_EXCHANGE', default = 'mymonit', as_= str)
+    container.config.rabbit_routing.from_env('RABBIT_ROUTING', default = 'measures', as_= str)
+    container.config.rabbit_queue.from_env('RABBIT_QUEUE', default = 'measures', as_= str)
     # rest
-    container.config.rest_host.from_env("REST_HOST", default = "0.0.0.0", as_ = str)
+    container.config.rest_host.from_env('REST_HOST', default = '0.0.0.0', as_ = str)
     # logstash
-    container.config.logstash_host.from_env("LOGSTASH_HOST", default = 'localhost', as_ = str)
-    container.config.logstash_port.from_env("LOGSTASH_PORT", default = 5959, as_ = int)
+    container.config.logstash_host.from_env('LOGSTASH_HOST', default = 'localhost', as_ = str)
+    container.config.logstash_port.from_env('LOGSTASH_PORT', default = 5959, as_ = int)
 
     container.wire(modules=[__name__])
 
