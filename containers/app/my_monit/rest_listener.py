@@ -2,6 +2,7 @@
 
 from abc import ABC
 from flask import Flask, request, jsonify
+from itsdangerous import json
 import jwt
 
 from .errors import AuthorizationException, DbIntegrityError, InvalidArgument
@@ -49,6 +50,10 @@ class FlaskResource(ABC):
             'user': user
         }
 
+    def to_json(self, obj):
+        '''indirection to make testing easier'''
+        return jsonify(obj)
+
 class MeasuresResource(FlaskResource):
     '''resource mapping the measures'''
 
@@ -66,7 +71,7 @@ class MeasuresResource(FlaskResource):
         measures = self._measure_service.retrieve_measures(experiment_id = experiment_id,
                                                             current_user = user_id,
                                                             page = page)
-        return jsonify(measures), 200
+        return self.to_json(measures), 200
 
 class ExperimentResource(FlaskResource):
     '''resource mapping the experiments'''
