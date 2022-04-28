@@ -49,14 +49,12 @@ class MeasuresResource(FlaskResource):
         super().__init__(logging)
         self._measure_service = measures_service
 
-    def get(self, experiment_id:int):
+    def get(self, experiment_id:int, page:int):
         '''retrieve measures for an experiment'''
         user_id = self.get_user()
         self.log_info(f'called API', metadata = self.metadata(api = '/measures/<int:experiment_id>',
                                                               method = 'GET',
                                                               user = user_id))
-        #TODO
-        page = 1
         measures = self._measure_service.retrieve_measures(experiment_id = experiment_id,
                                                             current_user = user_id,
                                                             page = page)
@@ -112,6 +110,17 @@ class UserResouce(FlaskResource):
                                        user_dict = request.json)
         return 'created', 201
 
+    def put(self, user_to_update:str):
+        '''updates a user'''
+        user_id = self.get_user()
+        self._logging.info(f'called API', metadata = self.metadata(api = '/users/',
+                                                                   method = 'PUT',
+                                                                   user = user_id))
+        self._user_service.update_user(current_user = user_id,
+                                       user_to_update = user_to_update,
+                                       user_dict = request.json)
+        return 'updated', 200
+
 class ExceptionResource(FlaskResource):
 
     def __init__(self, logging: Logging) -> None:
@@ -124,6 +133,7 @@ class ExceptionResource(FlaskResource):
             'exception': str(exception),
             'httpstatus': http_status
         })
+        print(exception)
         return message, http_status
 
 class RestListener():
@@ -170,6 +180,8 @@ class RestListener():
         @app.route("/measures/<int:experiment_id>", methods=['GET'])
         def get_measures(experiment_id:int):
             '''retrieve measures for an experiment'''
+            # TODO
+            page = 1
             return self._measure_resource.get(experiment_id = experiment_id)
 
         # Experiments
@@ -195,6 +207,11 @@ class RestListener():
         def create_users():
             '''creates a user'''
             return self._user_resource.post()
+
+        @app.route("/users/<user>", methods=['PUT'])
+        def update_user(user):
+            '''updates a user'''
+            return self._user_resource.put(str(user))
 
         # Utilities
 
