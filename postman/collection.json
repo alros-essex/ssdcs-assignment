@@ -26,15 +26,49 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"S010\",\n    \"name\": \"Foo Bar\",\n    \"username\": \"foo\",\n    \"email\": \"foo@bar.com\",\n    \"role\": \"SCIENTIST\"\n}"
+							"raw": "{\n    \"user_id\": \"S011\",\n    \"name\": \"Foo Bar\",\n    \"username\": \"foo\",\n    \"email\": \"foo@bar.com\",\n    \"role\": \"SCIENTIST\"\n}"
 						},
 						"url": {
-							"raw": "{{url}}/users",
+							"raw": "{{url}}/users/",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"users"
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Upd Bar\",\n    \"username\": \"upd\",\n    \"email\": \"foo@localhost\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/users/S011",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"S011"
 							]
 						}
 					},
@@ -62,12 +96,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{url}}/experiments",
+							"raw": "{{url}}/users/",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"experiments"
+								"users",
+								""
 							]
 						}
 					},
@@ -100,12 +135,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{url}}/experiments",
+							"raw": "{{url}}/experiments/",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"experiments"
+								"experiments",
+								""
 							]
 						}
 					},
@@ -132,12 +168,13 @@
 							"raw": "{\n    \"name\": \"EXP0001\"\n}"
 						},
 						"url": {
-							"raw": "{{url}}/experiments",
+							"raw": "{{url}}/experiments/",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"experiments"
+								"experiments",
+								""
 							]
 						}
 					},
