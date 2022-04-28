@@ -39,7 +39,8 @@ class UserService():
         '''inserts a user'''
         if not (self.is_admin(current_user) or current_user == user_to_update):
             raise AuthorizationException
-        current_user = self._storage.read_user(user_id = user_to_update, current_user = current_user)
+        current_user = self._storage.read_user(user_id = user_to_update,
+                                               current_user = current_user)
         if current_user is None:
             # User does not exist
             raise InvalidArgument

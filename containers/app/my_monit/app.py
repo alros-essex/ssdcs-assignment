@@ -120,7 +120,7 @@ def init():
     container.config.rabbit_routing.from_env('RABBIT_ROUTING', default = 'measures', as_= str)
     container.config.rabbit_queue.from_env('RABBIT_QUEUE', default = 'measures', as_= str)
     # rest
-    container.config.rest_host.from_env('REST_HOST', default = "0.0.0.0", as_ = str)
+    container.config.rest_host.from_env('REST_HOST', default = '0.0.0.0', as_ = str)
     # logstash
     container.config.logstash_host.from_env('LOGSTASH_HOST', default = 'localhost', as_ = str)
     container.config.logstash_port.from_env('LOGSTASH_PORT', default = 5959, as_ = int)
