@@ -77,7 +77,9 @@ class RabbitConnector():
         while True:
             try:
                 return pika.BlockingConnection(pika.ConnectionParameters(configuration.url))
-            except Exception as error:
+            except pika.exceptions.AMQPError as error:
+                # TODO verify that this exception is enough
+                print(error)
                 time.sleep(5)
 
 class RabbitMessageProcessor():

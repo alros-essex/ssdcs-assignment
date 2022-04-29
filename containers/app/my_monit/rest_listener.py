@@ -49,6 +49,13 @@ class FlaskResource(ABC):
             'user': user
         }
 
+    def to_json(self, obj):
+        '''indirection to make testing easier'''
+        return jsonify(obj)
+
+    def get_request_json(self):
+        return request.json
+
 class MeasuresResource(FlaskResource):
     '''resource mapping the measures'''
 
@@ -66,7 +73,7 @@ class MeasuresResource(FlaskResource):
         measures = self._measure_service.retrieve_measures(experiment_id = experiment_id,
                                                             current_user = user_id,
                                                             page = page)
-        return jsonify(measures), 200
+        return self.to_json(measures), 200
 
 class ExperimentResource(FlaskResource):
     '''resource mapping the experiments'''
@@ -83,7 +90,7 @@ class ExperimentResource(FlaskResource):
                                                                    method = 'GET',
                                                                    user = user_id))
         experiments = self._experiment_service.retrieve_experiments(current_user = user_id)
-        return jsonify(experiments), 200
+        return self.to_json(experiments), 200
 
     def post(self):
         '''create a new experiment'''
@@ -91,7 +98,7 @@ class ExperimentResource(FlaskResource):
         self._logging.info('called API', metadata = self.metadata(api = '/experiments/',
                                                                    method = 'POST',
                                                                    user = user_id))
-        self._experiment_service.insert_experiment(experiment_dict = request.json,
+        self._experiment_service.insert_experiment(experiment_dict = self.get_request_json(),
                                                        current_user = user_id)
         return 'created', 201
 
@@ -110,7 +117,7 @@ class UserResouce(FlaskResource):
                                                                    method = 'GET',
                                                                    user = user_id))
         users = self._user_service.retrieve_users(user_id)
-        return jsonify(users), 200
+        return self.to_json(users), 200
 
     def post(self):
         '''creates a user'''
@@ -119,7 +126,7 @@ class UserResouce(FlaskResource):
                                                                    method = 'POST',
                                                                    user = user_id))
         self._user_service.insert_user(current_user = user_id,
-                                       user_dict = request.json)
+                                       user_dict = self.get_request_json())
         return 'created', 201
 
     def put(self, user_to_update:str):
@@ -130,14 +137,11 @@ class UserResouce(FlaskResource):
                                                                    user = user_id))
         self._user_service.update_user(current_user = user_id,
                                        user_to_update = user_to_update,
-                                       user_dict = request.json)
+                                       user_dict = self.get_request_json())
         return 'updated', 200
 
 class ExceptionResource(FlaskResource):
     '''resource mapping all exceptions'''
-
-    def __init__(self, logging: Logging) -> None:
-        '''builds the instance'''
 
     def handle_error(self, exception, message:str, http_status:int):
         '''handles all errors logging them in a standard way'''
@@ -227,10 +231,6 @@ class RestListener():
             return self._user_resource.put(str(user))
 
         # Utilities
-
-        def handle(exception, msg, status):
-            print(exception)
-            return msg, status
 
         @app.errorhandler(AuthorizationException)
         def handle_authorization_error(exception):
