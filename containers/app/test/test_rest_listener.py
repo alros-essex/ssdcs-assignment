@@ -50,6 +50,13 @@ class TestExperimentResource(unittest.TestCase):
         self.experiment_service.insert_experiment.assert_called()
         self.log.info.assert_called()
         self.assertEqual(201, ret)
+
+    def test_put(self):
+        _, ret = self.experiments.put('1')
+
+        self.experiment_service.update_experiment.assert_called()
+        self.log.info.assert_called()
+        self.assertEqual(200, ret)
         
 class TestUserResource(unittest.TestCase):
     '''tests for the rest service'''

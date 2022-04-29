@@ -94,9 +94,26 @@ class Storage():
                             for_update = False)
         return [Storage._to_experiment(ex) for ex in cur]
 
+    # to be protected with user's check from the caller
     def insert_experiment(self, experiment:Experiment) -> None:
         '''inserts an experiment'''
         self._execute('''INSERT INTO EXPERIMENTS(NAME) VALUES (%(name)s)''',
+                      { 'name': experiment.name })
+
+    # to be protected with user's check from the caller
+    def read_experiment(self, experiment_id:str, ) -> Experiment:
+        '''returns an experiment given its id'''
+        cur = self._execute('''SELECT ex.ID, ex.NAME
+                            FROM EXPERIMENTS ex
+                            WHERE ex.ID = %(experiment_id)s''',
+                            { 'experiment_id': experiment_id },
+                            for_update = False)
+        experiments = [Storage._to_experiment(ex) for ex in cur]
+        return experiments[0] if len(experiments)>0 else None
+
+    # to be protected with user's check from the caller
+    def update_experiment(self, experiment:Experiment) -> None:
+        self._execute('''UPDATE EXPERIMENTS SET NAME = (%(name)s)''',
                       { 'name': experiment.name })
 
     # Users
@@ -174,6 +191,8 @@ class Storage():
                             for_update = False)
         return [r[0] for r in cur][0] == 1
 
+    # Utility methods for conversion
+
     @classmethod
     def _to_measure(cls, row):
         '''parses a row: measure type / timestamp / experiment name / value'''
@@ -196,6 +215,8 @@ class Storage():
                     username = row[2],
                     email = row[3],
                     role = row[4])
+
+    # Utility to execute queries
 
     def _execute(self, statement, params, for_update = True):
         '''calls the database'''

@@ -99,8 +99,19 @@ class ExperimentResource(FlaskResource):
                                                                    method = 'POST',
                                                                    user = user_id))
         self._experiment_service.insert_experiment(experiment_dict = self.get_request_json(),
-                                                       current_user = user_id)
+                                                   current_user = user_id)
         return 'created', 201
+
+    def put(self, experiment_id):
+        '''updates an experiment'''
+        user_id = self.get_user()
+        self._logging.info('called API', metadata = self.metadata(api = '/experiments/',
+                                                                  method = 'PUT',
+                                                                  user = user_id))
+        self._experiment_service.update_experiment(experiment_to_update = experiment_id,
+                                                   experiment_dict = self.get_request_json(),
+                                                   current_user = user_id)
+        return 'updated', 200
 
 class UserResouce(FlaskResource):
     '''resource mapping users'''
@@ -212,6 +223,11 @@ class RestListener():
         def post_experiment():
             '''create a new experiment'''
             return self._experiment_resource.post()
+
+        @app.route('/experiments/<experiment>', methods=['PUT'])
+        def put_experiment(experiment):
+            '''updates an experiment'''
+            return self._experiment_resource.put(experiment)
 
         # Users
 

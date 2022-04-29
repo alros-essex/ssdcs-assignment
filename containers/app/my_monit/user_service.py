@@ -45,12 +45,12 @@ class UserService():
             # User does not exist
             raise InvalidArgument
         updated_user = User(#the user can't change id
-                    user_id = current_user.user_id,
-                    name = user_dict['name'],
-                    email = user_dict['email'],
-                    username = user_dict['username'],
-                    # the user can't change role
-                    role = current_user.role)
+                            user_id = current_user.user_id,
+                            name = user_dict['name'],
+                            email = user_dict['email'],
+                            username = user_dict['username'],
+                            # the user can't change role
+                            role = current_user.role)
         if not updated_user.is_valid():
             # the user must be valid
             raise InvalidArgument
