@@ -2,7 +2,6 @@
 
 from abc import ABC
 from flask import Flask, request, jsonify
-from itsdangerous import json
 import jwt
 
 from .errors import AuthorizationException, DbIntegrityError, InvalidArgument
@@ -144,10 +143,6 @@ class UserResouce(FlaskResource):
 class ExceptionResource(FlaskResource):
     '''resource mapping all exceptions'''
 
-    def __init__(self, logging: Logging) -> None:
-        '''builds the instance'''
-        super().__init__(logging)
-
     def handle_error(self, exception, message:str, http_status:int):
         '''handles all errors logging them in a standard way'''
         log = self._logging.warn if http_status<500 else self._logging.error
@@ -236,10 +231,6 @@ class RestListener():
             return self._user_resource.put(str(user))
 
         # Utilities
-
-        def handle(exception, msg, status):
-            print(exception)
-            return msg, status
 
         @app.errorhandler(AuthorizationException)
         def handle_authorization_error(exception):

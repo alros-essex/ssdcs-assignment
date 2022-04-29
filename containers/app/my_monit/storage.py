@@ -204,7 +204,7 @@ class Storage():
             cur.execute(statement, params)
         except mysql.connector.IntegrityError as exception:
             #TODO proper logging
-            raise DbIntegrityError
+            raise DbIntegrityError from exception
         if for_update:
             self.cnx.commit()
         return cur
