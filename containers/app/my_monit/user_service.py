@@ -21,6 +21,10 @@ class UserService():
             raise AuthorizationException
         return [u.serialize() for u in self._storage.read_users()]
 
+    def retrieve_user(self, user_id, current_user) -> User:
+        '''return user with id'''
+        return self._storage.read_user(user_id = user_id, current_user = current_user)
+
     def insert_user(self, user_dict, current_user):
         '''inserts a user'''
         if self.is_admin(current_user):

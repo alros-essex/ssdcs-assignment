@@ -1,6 +1,7 @@
 '''REST APIs'''
 
 from abc import ABC
+from math import exp
 from flask import Flask, request, jsonify
 import jwt
 
@@ -113,6 +114,34 @@ class ExperimentResource(FlaskResource):
                                                    current_user = user_id)
         return 'updated', 200
 
+class ExperimentAssociationResource(FlaskResource):
+    '''resource mapping the association scientist-experiments'''
+
+    def __init__(self, experiment_service:ExperimentService, logging: Logging) -> None:
+        '''builds the instance'''
+        super().__init__(logging)
+        self._experiment_service = experiment_service
+
+    def get(self):
+        '''returns associations scientists - experiments'''
+        user_id = self.get_user()
+        self._logging.info('called API', metadata = self.metadata(api = '/scientists-experiments/',
+                                                                  method = 'GET',
+                                                                  user = user_id))
+        associations = self._experiment_service.get_associations(current_user = user_id)
+        # TODO group by experiment to make a tree
+        return self.to_json(associations), 200
+
+    def post(self, scientist_id:str, experiment_id:int):
+        '''associates scientist to experiment'''
+        user_id = self.get_user()
+        self._logging.info('called API', metadata = self.metadata(api = '/scientists-experiments/',
+                                                                  method = 'POST',
+                                                                  user = user_id))
+        self._experiment_service.associate(scientist = scientist_id, experiment = experiment_id,
+                                           current_user = user_id)
+        return 'created', 200
+
 class UserResouce(FlaskResource):
     '''resource mapping users'''
 
@@ -180,6 +209,8 @@ class RestListener():
         self._experiment_resource = ExperimentResource(experiment_service = experiment_service,
                                                        logging = logging)
         self._user_resource = UserResouce(user_service = user_service, logging = logging)
+        self._experiment_association_resource = ExperimentAssociationResource(experiment_service = experiment_service,
+                                                                              logging = logging)
         self._exception_resource = ExceptionResource(logging = logging)
 
     def run(self):
@@ -245,6 +276,19 @@ class RestListener():
         def update_user(user):
             '''updates a user'''
             return self._user_resource.put(str(user))
+
+        # Experiments / Users
+
+        @app.route('/scientists-experiments/', methods=['GET'])
+        def get_associations():
+            '''retrieve all associations'''
+            return self._experiment_association_resource.get()
+
+        @app.route('/scientists-experiments/<experiment>/<user>', methods=['POST'])
+        def post_associations(experiment:int, user:str):
+            '''creates a new association'''
+            return self._experiment_association_resource.post(experiment_id=experiment, 
+                                                              scientist_id=user)
 
         # Utilities
 

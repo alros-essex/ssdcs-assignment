@@ -22,3 +22,5 @@ CREATE TABLE EXPERIMENTS
 -- add some data
 --
 INSERT INTO EXPERIMENTS(NAME) VALUE('device-vibrations');
+
+INSERT INTO EXPERIMENTS(NAME) VALUE('black-holes');
