@@ -1,0 +1,48 @@
+<html>
+<head>
+  <title>Coding Part</title>
+</head>
+
+<body>
+  <form>
+    <div>
+      <button id="sign-out">Sign Out</button>
+    </div>
+  </form>
+
+  <p id="userEmail"></p>
+
+  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+  
+  <script>
+    var config = {
+      apiKey: "AIzaSyDWxR3Y5dQj09Nr15VtC13VGnRWh9WgOV4",
+      authDomain: "coding-output.firebaseapp.com",
+      databaseURL: "https://coding-output-default-rtdb.firebaseio.com",
+      storageBucket: "coding-output.appspot.com",
+    };
+    firebase.initializeApp(config);
+  </script>
+
+  <script>
+    firebase.auth().onAuthStateChanged(function(user) {
+      window.user = user;
+      console.log(user.email);
+      document.querySelector("#userEmail").innerHTML = user.email;
+    });
+    </script>
+  
+  <script>    
+    document.querySelector('#sign-out').addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      firebase.auth().signOut()
+        .catch((err) => {
+            console.log('error signing out', err);
+            return;
+        });
+      window.location = 'index.html';
+    });
+  </script>
+</body>
+</html>
