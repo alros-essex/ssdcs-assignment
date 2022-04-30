@@ -4,6 +4,7 @@ import json
 import time
 import pika
 
+from .logging import Logging
 from .storage import Storage
 from .model import Measure
 
@@ -76,14 +77,17 @@ class RabbitConnector():
         while True:
             try:
                 return pika.BlockingConnection(pika.ConnectionParameters(configuration.url))
-            except Exception as _error:
+            except pika.exceptions.AMQPError as error:
+                # TODO verify that this exception is enough
+                print(error)
                 time.sleep(5)
 
 class RabbitMessageProcessor():
     '''Utility to process a message'''
 
-    def __init__(self, storage:Storage) -> None:
+    def __init__(self, storage:Storage, logging:Logging) -> None:
         self._storage = storage
+        self._logging = logging
 
     def process(self, _ch, _method, _properties, message) -> None:
         '''processes one message'''
@@ -92,18 +96,31 @@ class RabbitMessageProcessor():
                           measure_type = parsed_measure['measure'],
                           timestamp = parsed_measure['timestamp'],
                           value = parsed_measure['value'])
+        self._logging.info('insert message', metadata = {
+            'service': 'RabbitMessageProcessor',
+            'message': parsed_measure
+        })
         self._storage.insert_measure(measure)
 
 class RabbitListener():
     '''Listens to RabbitMQ and processes messages'''
 
-    def __init__(self, configuration:RabbitConfiguration, 
-                 message_processor:RabbitMessageProcessor) -> None:
+    def __init__(self, configuration:RabbitConfiguration,
+                 message_processor:RabbitMessageProcessor,
+                 logging: Logging) -> None:
         self._configuration = configuration
         self._message_processor = message_processor
+        self._logging = logging
 
     def run(self):
         '''main method that runs the listener'''
+        metadata = {
+                'service': 'RabbitListener',
+                'exchange': self._configuration.exchange,
+                'queue': self._configuration.queue,
+                'routing': self._configuration.routing
+        }
+        self._logging.info('connect to RabbitMQ: in progress', metadata = metadata)
         connection = RabbitConnector.connect(self._configuration)
         channel = connection.channel()
 
@@ -122,5 +139,6 @@ class RabbitListener():
         channel.basic_consume(queue = self._configuration.queue,
                               auto_ack = True,
                               on_message_callback=self._message_processor.process)
+        self._logging.info('connect to RabbitMQ: completed', metadata = metadata)
 
         channel.start_consuming()

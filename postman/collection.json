@@ -6,87 +6,269 @@
 	},
 	"item": [
 		{
-			"name": "retrieve measures",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{url}}/measures/1",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"measures",
-						"1"
-					]
+			"name": "users",
+			"item": [
+				{
+					"name": "create users",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"S011\",\n    \"name\": \"Foo Bar\",\n    \"username\": \"foo\",\n    \"email\": \"foo@bar.com\",\n    \"role\": \"SCIENTIST\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/users/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Upd Bar\",\n    \"username\": \"upd\",\n    \"email\": \"foo@localhost\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/users/S011",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"S011"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "retrieve users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/users/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "retrieve experiment",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true,
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
+			"name": "experiments",
+			"item": [
+				{
+					"name": "retrieve experiment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/experiments/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"experiments",
+								""
+							]
+						}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{url}}/experiments",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"experiments"
-					]
+				{
+					"name": "create experiment",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"EXP0001\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/experiments/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"experiments",
+								""
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "create experiment Copy",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
+			"name": "measures",
+			"item": [
+				{
+					"name": "retrieve measures",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/measures/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"measures",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"EXP0001\"\n}"
-				},
-				"url": {
-					"raw": "{{url}}/experiments",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"experiments"
-					]
+			]
+		},
+		{
+			"name": "authentication",
+			"item": [
+				{
+					"name": "authenticate",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"S001\"}"
+						},
+						"url": {
+							"raw": "{{url}}/authenticate",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

@@ -39,6 +39,6 @@ VALUES(
     'S001', 
     'Peter Higg',
     'phigg',
-    'noreply@localhost', 
+    'phigg@localhost', 
     (SELECT ID FROM ROLES WHERE NAME = 'SCIENTIST')
 );

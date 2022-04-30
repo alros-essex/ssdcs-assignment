@@ -14,7 +14,8 @@ setup(
         "pika >= 1.2.0",
         "mysql-connector-python == 8.0.28",
         "python-logstash >= 0.4.6",
-        "dependency_injector >= 4.39.1"
+        "dependency_injector >= 4.39.1",
+        "pyjwt >= 2.3.0"
     ],
     python_requires='>=3.9'
 )

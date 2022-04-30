@@ -10,11 +10,18 @@ from .experiment_service import ExperimentService
 from .measure_service import MeasuresService
 from .storage import Storage, StorageConfiguration
 from .rest_listener import RestListener, RestConfiguration
+from .logging import Logging
 
 class Container(containers.DeclarativeContainer):
     '''main configuration'''
 
     config = providers.Configuration()
+
+    logging = providers.Singleton(
+        Logging,
+        host = config.logstash_host,
+        port = config.logstash_port
+    )
 
     storage_configuration = providers.Singleton(
         StorageConfiguration,
@@ -46,13 +53,15 @@ class Container(containers.DeclarativeContainer):
 
     message_processor = providers.Singleton(
         RabbitMessageProcessor,
-        storage = storage
+        storage = storage,
+        logging = logging
     )
 
     rabbit = providers.Singleton(
         RabbitListener,
         configuration = rabbit_configuration,
-        message_processor = message_processor
+        message_processor = message_processor,
+        logging = logging
     )
 
     user_service = providers.Singleton(
@@ -76,7 +85,8 @@ class Container(containers.DeclarativeContainer):
         configuration = rest_configuration,
         experiment_service = experiment_service,
         measures_service = measures_service,
-        user_service = user_service
+        user_service = user_service,
+        logging = logging
     )
 
 @inject
@@ -98,20 +108,22 @@ def init():
     container = Container()
 
     # db
-    container.config.db_user.from_env("DB_USER", default = 'root', as_ = str)
-    container.config.db_password.from_env("DB_PASSWORD", default = 'password', as_ = str)
-    container.config.db_host.from_env("DB_HOST", default = 'localhost', as_ = str)
-    container.config.db_database.from_env("DB_DATABASE", 'my_monit', as_ = str)
+    container.config.db_user.from_env('DB_USER', default = 'root', as_ = str)
+    container.config.db_password.from_env('DB_PASSWORD', default = 'password', as_ = str)
+    container.config.db_host.from_env('DB_HOST', default = 'localhost', as_ = str)
+    container.config.db_database.from_env('DB_DATABASE', 'my_monit', as_ = str)
     # rabbit
-    container.config.rabbit_url.from_env("RABBIT_URL", default = 'localhost', as_= str)
-    container.config.rabbit_user.from_env("RABBIT_USER", default = 'guest', as_= str)
-    container.config.rabbit_password.from_env("RABBIT_PASSWORD", default = 'guest', as_= str)
-    container.config.rabbit_exchange.from_env("RABBIT_EXCHANGE", default = 'mymonit', as_= str)
-    container.config.rabbit_routing.from_env("RABBIT_ROUTING", default = 'measures', as_= str)
-    container.config.rabbit_queue.from_env("RABBIT_QUEUE", default = 'measures', as_= str)
+    container.config.rabbit_url.from_env('RABBIT_URL', default = 'localhost', as_= str)
+    container.config.rabbit_user.from_env('RABBIT_USER', default = 'guest', as_= str)
+    container.config.rabbit_password.from_env('RABBIT_PASSWORD', default = 'guest', as_= str)
+    container.config.rabbit_exchange.from_env('RABBIT_EXCHANGE', default = 'mymonit', as_= str)
+    container.config.rabbit_routing.from_env('RABBIT_ROUTING', default = 'measures', as_= str)
+    container.config.rabbit_queue.from_env('RABBIT_QUEUE', default = 'measures', as_= str)
     # rest
-    container.config.rest_host.from_env("REST_HOST", default = "0.0.0.0", as_ = str)
-    #
+    container.config.rest_host.from_env('REST_HOST', default = '0.0.0.0', as_ = str)
+    # logstash
+    container.config.logstash_host.from_env('LOGSTASH_HOST', default = 'localhost', as_ = str)
+    container.config.logstash_port.from_env('LOGSTASH_PORT', default = 5959, as_ = int)
 
     container.wire(modules=[__name__])
 
