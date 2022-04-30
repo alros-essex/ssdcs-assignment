@@ -42,3 +42,12 @@ VALUES(
     'phigg@localhost', 
     (SELECT ID FROM ROLES WHERE NAME = 'SCIENTIST')
 );
+
+INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, ROLE)
+VALUES(
+    'S002', 
+    'Katie Bouman',
+    'kbouman',
+    'kbouman@localhost', 
+    (SELECT ID FROM ROLES WHERE NAME = 'SCIENTIST')
+);

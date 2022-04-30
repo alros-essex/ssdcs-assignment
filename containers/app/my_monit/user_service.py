@@ -21,6 +21,10 @@ class UserService():
             raise AuthorizationException
         return [u.serialize() for u in self._storage.read_users()]
 
+    def retrieve_user(self, user_id, current_user) -> User:
+        '''return user with id'''
+        return self._storage.read_user(user_id = user_id, current_user = current_user)
+
     def insert_user(self, user_dict, current_user):
         '''inserts a user'''
         if self.is_admin(current_user):
@@ -45,12 +49,12 @@ class UserService():
             # User does not exist
             raise InvalidArgument
         updated_user = User(#the user can't change id
-                    user_id = current_user.user_id,
-                    name = user_dict['name'],
-                    email = user_dict['email'],
-                    username = user_dict['username'],
-                    # the user can't change role
-                    role = current_user.role)
+                            user_id = current_user.user_id,
+                            name = user_dict['name'],
+                            email = user_dict['email'],
+                            username = user_dict['username'],
+                            # the user can't change role
+                            role = current_user.role)
         if not updated_user.is_valid():
             # the user must be valid
             raise InvalidArgument
