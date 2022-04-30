@@ -1,7 +1,6 @@
 '''REST APIs'''
 
 from abc import ABC
-from math import exp
 from flask import Flask, request, jsonify
 import jwt
 
@@ -209,8 +208,9 @@ class RestListener():
         self._experiment_resource = ExperimentResource(experiment_service = experiment_service,
                                                        logging = logging)
         self._user_resource = UserResouce(user_service = user_service, logging = logging)
-        self._experiment_association_resource = ExperimentAssociationResource(experiment_service = experiment_service,
-                                                                              logging = logging)
+        self._experiment_association_resource = ExperimentAssociationResource(
+                                                    experiment_service = experiment_service,
+                                                    logging = logging)
         self._exception_resource = ExceptionResource(logging = logging)
 
     def run(self):
@@ -287,7 +287,7 @@ class RestListener():
         @app.route('/scientists-experiments/<experiment>/<user>', methods=['POST'])
         def post_associations(experiment:int, user:str):
             '''creates a new association'''
-            return self._experiment_association_resource.post(experiment_id=experiment, 
+            return self._experiment_association_resource.post(experiment_id=experiment,
                                                               scientist_id=user)
 
         # Utilities
