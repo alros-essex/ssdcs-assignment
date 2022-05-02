@@ -253,7 +253,7 @@ class RestListener():
             '''retrieve measures for an experiment'''
             # TODO
             page = 1
-            return self._measure_resource.get(experiment_id = experiment_id)
+            return self._measure_resource.get(experiment_id = experiment_id, page = page)
 
         # Experiments
 
