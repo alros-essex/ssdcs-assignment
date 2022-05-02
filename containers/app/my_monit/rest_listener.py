@@ -128,8 +128,20 @@ class ExperimentAssociationResource(FlaskResource):
                                                                   method = 'GET',
                                                                   user = user_id))
         associations = self._experiment_service.get_associations(current_user = user_id)
-        # TODO group by experiment to make a tree
-        return self.to_json(associations), 200
+
+        return self.to_json(self._index_by_association(associations)), 200
+
+    def _index_by_association(self, associations):
+        indexed_by_experiments = {}
+        for association in associations:
+            key = association['experiment']['experiment_id']
+            if key not in indexed_by_experiments:
+                indexed_by_experiments[key] = {}
+            if 'users' not in indexed_by_experiments[key]:
+                indexed_by_experiments[key]['users'] = []
+            indexed_by_experiments[key]['users'].append(association['user'])
+        return indexed_by_experiments
+
 
     def post(self, scientist_id:str, experiment_id:int):
         '''associates scientist to experiment'''

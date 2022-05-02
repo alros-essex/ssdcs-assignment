@@ -1,13 +1,14 @@
 '''unit tests'''
 
-import logging
 import unittest
+from my_monit.model import User, Experiment
 from unittest.mock import Mock, MagicMock
 from my_monit.rest_listener import MeasuresResource
 from my_monit.rest_listener import ExperimentResource
 from my_monit.rest_listener import UserResouce
 from my_monit.rest_listener import ExceptionResource
 from my_monit.rest_listener import ExperimentAssociationResource
+
 
 from my_monit.model import Measure
 
@@ -114,19 +115,66 @@ class TestExperimentAssociationResource(unittest.TestCase):
     def setUp(self):
         self.log = Mock()
         self.experiment_service = Mock()
-        self.associations = ExperimentAssociationResource(experiment_service = self.experiment_service,
+        self.associations_srv = ExperimentAssociationResource(experiment_service = self.experiment_service,
                                                           logging = self.log)
-        mock_flask_utilities(self.associations)
+        mock_flask_utilities(self.associations_srv)
 
     def test_get(self):
-        _, ret = self.associations.get()
+        self.experiment_service.get_associations = MagicMock(return_value = [])
+
+        _, ret = self.associations_srv.get()
         
         self.experiment_service.get_associations.assert_called()
         self.log.info.assert_called()
         self.assertEqual(200, ret)
 
+    def test_index_by_association(self):
+        associations = [
+            {
+                'user': User(user_id = 'user1', name = 'x', username = 'x', email = 'x', role = 'x').serialize(),
+                'experiment': Experiment(experiment_id = 'experiment1', name = 'y').serialize()
+            },{
+                'user': User(user_id = 'user2', name = 'x', username = 'x', email = 'x', role = 'x').serialize(),
+                'experiment': Experiment(experiment_id = 'experiment1', name = 'y').serialize()
+            },{
+                'user': User(user_id = 'user1', name = 'x', username = 'x', email = 'x', role = 'x').serialize(),
+                'experiment': Experiment(experiment_id = 'experiment2', name = 'y').serialize()
+            }
+        ]
+
+        result = self.associations_srv._index_by_association(associations)
+
+        expected = {
+            'experiment1': {
+                'users': [{
+                    'user_id': 'user1',
+                    'name': 'x',
+                    'email': 'x',
+                    'username': 'x',
+                    'role': 'x'
+                },{
+                    'user_id': 'user2',
+                    'name': 'x',
+                    'email': 'x',
+                    'username': 'x',
+                    'role': 'x'
+                }]
+            },
+            'experiment2':{
+                'users': [{
+                    'user_id': 'user1',
+                    'name': 'x',
+                    'email': 'x',
+                    'username': 'x',
+                    'role': 'x'
+                }]
+            }
+        }
+
+        self.assertEquals(expected, result)
+
     def test_post(self):
-        _, ret = self.associations.post('S1', 'Exp1')
+        _, ret = self.associations_srv.post('S1', 'Exp1')
         
         self.experiment_service.associate.assert_called()
         self.log.info.assert_called()
