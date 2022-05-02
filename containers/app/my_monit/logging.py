@@ -49,5 +49,6 @@ class Logging():
             'level': str(level),
             'metadata': metadata
         }
+        print(msg)
         self._logger.info(msg = msg, extra = extra)
 

@@ -66,7 +66,8 @@ class Container(containers.DeclarativeContainer):
 
     user_service = providers.Singleton(
         UserService,
-        storage = storage
+        storage = storage,
+        logging = logging
     )
 
     experiment_service = providers.Singleton(

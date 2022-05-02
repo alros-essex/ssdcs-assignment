@@ -1,5 +1,49 @@
 '''Contains the shared model'''
 
+class LoggingModel:
+
+    from enum import Enum
+
+    class Context(Enum):
+        NORMAL = 'normal',
+        LOG = 'logging'
+
+    Context.secure_context = {}
+
+    @staticmethod
+    def is_logging(func):
+        def inner(*args, **kwargs):
+            LoggingModel._set_context_value(LoggingModel.Context.LOG)
+            func(*args, **kwargs)
+            LoggingModel._set_context_value(LoggingModel.Context.NORMAL)
+        return inner
+
+    @staticmethod
+    def _get_context():
+        return LoggingModel.Context.secure_context
+
+    @staticmethod
+    def _get_context_value():
+        import threading
+        thread_id = threading.get_native_id()
+        context = LoggingModel._get_context()
+        if thread_id not in context:
+            context[thread_id] = LoggingModel.Context.NORMAL
+        return context[thread_id]
+
+    @staticmethod
+    def _set_context_value(value:Context):
+        import threading
+        thread_id = threading.get_native_id()
+        context = LoggingModel._get_context()
+        context[thread_id] = value
+
+    @staticmethod
+    def do_not_log(func):
+        def inner(*args, **kwargs):
+            return func(*args, **kwargs) if LoggingModel._get_context_value() == LoggingModel.Context.NORMAL else '***'
+        return inner
+
 class Measure():
     '''Models one Measure'''
 
@@ -113,16 +157,19 @@ class User():
         return self._user_id
 
     @property
+    @LoggingModel.do_not_log
     def name(self):
         '''user's name'''
         return self._name
 
     @property
+    @LoggingModel.do_not_log
     def username(self):
         '''user's username'''
         return self._username
 
     @property
+    @LoggingModel.do_not_log
     def email(self):
         '''user's email'''
         return self._email
@@ -154,3 +201,9 @@ class User():
     def __ne__(self, __o: object) -> bool:
         '''not equals'''
         return not self.__eq__(__o)
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __str__(self) -> str:
+        return f'User: user_id={self.user_id} name={self.name} username={self.username} email={self.email} role={self.role}'

@@ -2,14 +2,16 @@
 
 from .storage import Storage
 from .errors import AuthorizationException, InvalidArgument
-from .model import User
+from .logging import Logging
+from .model import User, LoggingModel
 
 class UserService():
     '''Main service managing users'''
 
-    def __init__(self, storage:Storage) -> None:
+    def __init__(self, storage:Storage, logging: Logging) -> None:
         '''creates the instance'''
         self._storage = storage
+        self._logging = logging
 
     def is_admin(self, user_id:str, ) -> bool:
         '''returns True if user has role ADMIN'''
@@ -19,7 +21,9 @@ class UserService():
         '''returns all users'''
         if not self.is_admin(current_user):
             raise AuthorizationException
-        return [u.serialize() for u in self._storage.read_users()]
+        users = self._storage.read_users()
+        self._log(msg = 'users: {users}', method = 'retrieve_users', current_user = current_user, params={ 'users': users})
+        return [u.serialize() for u in users]
 
     def retrieve_user(self, user_id, current_user) -> User:
         '''return user with id'''
@@ -67,3 +71,16 @@ class UserService():
             # there can be no more than one user with that email
             raise InvalidArgument
         return self._storage.update_user(updated_user)
+
+    @LoggingModel.is_logging
+    def _log(self, msg:str, method:str, current_user:str, params=None):
+        formatted_msg = msg.format(**params)
+        self._logging.info(formatted_msg, metadata = self._metadata(method = method, user = current_user))
+
+    def _metadata(self, method:str, user:str):
+        '''generates standardized metadata'''
+        return {
+            'service': 'UserService',
+            'method': method,
+            'user': user
+        }
