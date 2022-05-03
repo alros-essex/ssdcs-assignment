@@ -119,8 +119,8 @@ class Storage():
 
     # to be protected with user's check from the caller
     def update_experiment(self, experiment:Experiment) -> None:
-        self._execute('''UPDATE EXPERIMENTS SET NAME = (%(name)s)''',
-                      { 'name': experiment.name })
+        self._execute('''UPDATE EXPERIMENTS SET NAME = (%(name)s) WHERE ID=%(id)s''',
+                      { 'name': experiment.name, 'id': experiment.experiment_id })
 
     # Users
 
