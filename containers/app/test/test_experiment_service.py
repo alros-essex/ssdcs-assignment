@@ -16,7 +16,8 @@ class TestExperimentService(unittest.TestCase):
         self.storage = Mock()
         self.user_service = Mock()
         self.experiment_service = ExperimentService(storage = self.storage,
-                                                    user_service = self.user_service)
+                                                    user_service = self.user_service,
+                                                    logging = Mock())
 
     def test_retrieve_experiments(self):
         '''verify the call to the storage'''
