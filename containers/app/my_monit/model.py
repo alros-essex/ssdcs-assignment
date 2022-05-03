@@ -130,6 +130,9 @@ class Experiment():
         '''not equals'''
         return not self.__eq__(__o)
 
+    def __str__(self) -> str:
+        return f'Experiment: experiment_id={self.experiment_id} name={self.name}' 
+
 class User():
     '''Models a user'''
 

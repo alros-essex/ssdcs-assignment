@@ -4,6 +4,8 @@ from enum import Enum
 import logging
 import logstash
 import sys
+from .model import LoggingModel
+from colorama import Fore
 
 class LoggingLevel(Enum):
     DEBUG = 'DEBUG'
@@ -11,6 +13,9 @@ class LoggingLevel(Enum):
     WARN = 'WARN'
     ERROR = 'ERROR'
     CRITICAL = 'CRITICAL'
+
+    def __str__(self) -> str:
+        return self.value
 
 class Logging():
     '''Logging business logic'''
@@ -22,33 +27,47 @@ class Logging():
         logger.addHandler(logstash.TCPLogstashHandler(host, port, version=1))
         self._logger = logger
 
-    def debug(self, msg:str, metadata) -> None:
+    def debug(self, msg:str, metadata, params=None) -> None:
         '''information useful to debug the application'''
-        self.log(msg, metadata, LoggingLevel.DEBUG)
+        self.log(msg, metadata, LoggingLevel.DEBUG, params)
 
-    def info(self, msg:str, metadata) -> None:
+    def info(self, msg:str, metadata, params=None) -> None:
         '''information about the application's flow'''
-        self.log(msg, metadata, LoggingLevel.INFO)
+        self.log(msg, metadata, LoggingLevel.INFO, params)
 
-    def warn(self, msg:str, metadata) -> None:
+    def warn(self, msg:str, metadata, params=None) -> None:
         '''abnomal behaviour that does not cause failure'''
-        self.log(msg, metadata, LoggingLevel.WARN)
+        self.log(msg, metadata, LoggingLevel.WARN, params)
 
-    def error(self, msg:str, metadata) -> None:
+    def error(self, msg:str, metadata, params=None) -> None:
         '''errors are unrecoverable and cause the failure of the operation'''
-        self.log(msg, metadata, LoggingLevel.ERROR)
+        self.log(msg, metadata, LoggingLevel.ERROR, params)
 
-    def critical(self, msg:str, metadata) -> None:
+    def critical(self, msg:str, metadata, params=None) -> None:
         '''critical errors are unrecoverable and cause the failure of the application'''
-        self.log(msg, metadata, LoggingLevel.CRITICAL)
+        self.log(msg, metadata, LoggingLevel.CRITICAL, params)
 
-    def log(self, msg:str, metadata, level:LoggingLevel) -> None:
+    _logging_color = {
+        LoggingLevel.CRITICAL: Fore.RED,
+        LoggingLevel.ERROR: Fore.RED,
+        LoggingLevel.WARN: Fore.YELLOW,
+        LoggingLevel.INFO: Fore.GREEN,
+        LoggingLevel.DEBUG: Fore.GREEN
+    }
+        
+
+    @LoggingModel.is_logging
+    def log(self, msg:str, metadata, level:LoggingLevel, params=None) -> None:
         '''logs an event'''
-        extra = {
-            'python version': repr(sys.version_info),
-            'level': str(level),
-            'metadata': metadata
-        }
-        print(msg)
-        self._logger.info(msg = msg, extra = extra)
+        try:
+            formatted_msg = msg.format(**params) if params is not None else msg
+            extra = {
+                'level': str(level),
+                'metadata': metadata
+            }
+            color = Logging._logging_color[level]
+            print(f'{level} - {color}{extra}{Fore.RESET} - {formatted_msg}')
+            self._logger.info(msg = formatted_msg, extra = extra)
+        except Exception as ex:
+            print(f'{ex}')
 
