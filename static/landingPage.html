@@ -12,31 +12,45 @@
 
   <p id="userEmail"></p>
 
-  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-  
-  <script>
-    var config = {
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js'
+
+    const firebaseConfig = {
       apiKey: "AIzaSyDWxR3Y5dQj09Nr15VtC13VGnRWh9WgOV4",
       authDomain: "coding-output.firebaseapp.com",
       databaseURL: "https://coding-output-default-rtdb.firebaseio.com",
+      projectId: "coding-output",
       storageBucket: "coding-output.appspot.com",
+      messagingSenderId: "953911328931",
+      appId: "1:953911328931:web:a4d2f0eb0bb35cdd1eff16",
+      measurementId: "G-T8DCDWNTQJ"
     };
-    firebase.initializeApp(config);
-  </script>
 
-  <script>
-    firebase.auth().onAuthStateChanged(function(user) {
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    const auth = getAuth();
+
+    onAuthStateChanged(auth, (user) => {
       window.user = user;
-      console.log(user.email);
       document.querySelector("#userEmail").innerHTML = user.email;
+      user.getIdToken().then((res) => {
+        // const http = new XMLHttpRequest();
+        // http.open("GET", "localhost:PORT/ROUTE")
+        // http.setRequestHeader('Authorization', 'Bearer: ' + res);
+        // http.send();
+        console.log(res);
+      }).catch((err) => {
+        console.log(err);
+      });
     });
-    </script>
-  
-  <script>    
+
     document.querySelector('#sign-out').addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
-      firebase.auth().signOut()
+      signOut(auth)
         .catch((err) => {
             console.log('error signing out', err);
             return;

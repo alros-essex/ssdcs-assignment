@@ -15,30 +15,33 @@
       <div>
         <button id="sign-in">Sign In</button>
         <button id="sign-up">Register</button>
-
-        <button id="sign-out">Sign Out</button>
       </div>
     </form>
 
-    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-    
-    <script>
-      var config = {
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-app.js";
+      import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js'
+  
+      const firebaseConfig = {
         apiKey: "AIzaSyDWxR3Y5dQj09Nr15VtC13VGnRWh9WgOV4",
         authDomain: "coding-output.firebaseapp.com",
         databaseURL: "https://coding-output-default-rtdb.firebaseio.com",
+        projectId: "coding-output",
         storageBucket: "coding-output.appspot.com",
+        messagingSenderId: "953911328931",
+        appId: "1:953911328931:web:a4d2f0eb0bb35cdd1eff16",
+        measurementId: "G-T8DCDWNTQJ"
       };
-      firebase.initializeApp(config);
-    </script>
-
-    <script>
-      firebase.auth().onAuthStateChanged(function(user) {
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+  
+      const auth = getAuth();
+  
+      onAuthStateChanged(auth, (user) => {
         window.user = user;
       });
-    </script>
-    
-    <script>    
+
       const validEmail = (email) => {
         // return true;
         return String(email)
@@ -51,6 +54,7 @@
       const setError = (error) => {
         document.querySelector("#errors").innerHTML += `<p>${error}</p>`;
       }
+
       document.querySelector('#sign-up').addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -72,7 +76,7 @@
 
         if (!validData) return;
     
-        firebase.auth().createUserWithEmailAndPassword(email, password)
+        createUserWithEmailAndPassword(auth, email, password)
           .then(function () {
             console.log('registered user');
             window.location = 'landingPage.html';
@@ -82,7 +86,9 @@
             console.log('error signing up', err);
             setError(err.message);
           }); 
-      });const resetError = () => {
+      });
+  
+      const resetError = () => {
         document.querySelector("#errors").innerHTML = '';
       }
 
@@ -105,7 +111,7 @@
           validData = false;
         }
 
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        signInWithEmailAndPassword(auth, email, password)
           .then(function () {
             window.location = 'landingPage.html';
           })
@@ -113,12 +119,6 @@
             console.log('error logging in', err);
             setError(err.message);
           })
-      });
-      
-      document.querySelector('#sign-out').addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        firebase.auth().signOut();
       });
     </script>
   </body>
