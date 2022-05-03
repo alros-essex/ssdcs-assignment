@@ -28,10 +28,6 @@ class FlaskResource(ABC):
         '''build the instance'''
         self._logging = logging
 
-    def log_info(self, msg:str, metadata):
-        '''logs at info level'''
-        self._logging.info(msg = msg, metadata = metadata)
-
     def get_user(self):
         '''retrieves the user from the request'''
         token = request.headers['Authorization'].split()[1]
@@ -67,9 +63,9 @@ class MeasuresResource(FlaskResource):
     def get(self, experiment_id:int, page:int):
         '''retrieve measures for an experiment'''
         user_id = self.get_user()
-        self.log_info('called API', metadata = self.metadata(api = '/measures/<int:experiment_id>',
-                                                              method = 'GET',
-                                                              user = user_id))
+        self._logging.info('called API', metadata = self.metadata(api = '/measures/<int:experiment_id>',
+                                                                  method = 'GET',
+                                                                  user = user_id))
         measures = self._measure_service.retrieve_measures(experiment_id = experiment_id,
                                                             current_user = user_id,
                                                             page = page)
