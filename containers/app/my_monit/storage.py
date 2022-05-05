@@ -197,6 +197,17 @@ class Storage():
                             for_update = False)
         return [r[0] for r in cur][0] == 1
 
+    def read_users_by_username(self, username:str) -> User:
+        '''return the user given its username'''
+        cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
+                            FROM USERS us, ROLES ro 
+                            WHERE us.ROLE = ro.ID
+                            AND us.USERNAME = %(username)s''',
+                            { 'username': username },
+                            for_update = False)
+        users = [Storage._to_user(u) for u in cur]
+        return users[0] if len(users) == 1 else None
+
     # Scientist/Experiment
 
     # to be protected with user's check from the caller

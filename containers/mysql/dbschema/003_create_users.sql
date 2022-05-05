@@ -28,9 +28,9 @@ CREATE TABLE USERS
 INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, ROLE)
 VALUES(
     'A001', 
-    'Default Admin',
-    'admin',
-    'noreply@localhost', 
+    'Allan Alcorn',
+    '5MS0kr1nE5Qm7ZNzAyHNCVfapcf2',
+    'aalcorn@home.cern',
     (SELECT ID FROM ROLES WHERE NAME = 'ADMIN')
 );
 
@@ -38,8 +38,8 @@ INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, ROLE)
 VALUES(
     'S001', 
     'Peter Higg',
-    'phigg',
-    'phigg@localhost', 
+    'uJayGH994iVa2TY5auSNYZoUpwk1',
+    'phigg@home.cern', 
     (SELECT ID FROM ROLES WHERE NAME = 'SCIENTIST')
 );
 
@@ -47,7 +47,7 @@ INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, ROLE)
 VALUES(
     'S002', 
     'Katie Bouman',
-    'kbouman',
-    'kbouman@localhost', 
+    'hirbBCceXlWUGdpNHUpaNtworjm2',
+    'kbouman@home.cern', 
     (SELECT ID FROM ROLES WHERE NAME = 'SCIENTIST')
 );
