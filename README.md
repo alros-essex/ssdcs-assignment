@@ -75,6 +75,10 @@ start infra:
 start the application:
 ```
 cd containers/app/
+# On Windows
+$Env:GOOGLE_APPLICATION_CREDENTIALS = "$(pwd)\private_key.json"
+# Other systens
+export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/private_key.json"
 python3 main.py
 ```
 

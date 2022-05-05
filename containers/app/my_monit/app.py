@@ -4,6 +4,8 @@ import threading
 from dependency_injector.wiring import Provide, inject
 from dependency_injector import containers, providers
 
+import firebase_admin
+
 from .user_service import UserService
 from .rabbit_listener import RabbitListener, RabbitConfiguration, RabbitMessageProcessor
 from .experiment_service import ExperimentService
@@ -91,6 +93,8 @@ class Container(containers.DeclarativeContainer):
         user_service = user_service,
         logging = logging
     )
+
+    default_app = firebase_admin.initialize_app()
 
 @inject
 def main(rabbit_listener: RabbitListener = Provide[Container.rabbit],

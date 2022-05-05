@@ -4,6 +4,9 @@ from abc import ABC
 from flask import Flask, request, jsonify
 import jwt
 
+import firebase_admin
+from firebase_admin import auth
+
 from .errors import AuthorizationException, DbIntegrityError, InvalidArgument
 from .logging import Logging
 from .measure_service import MeasuresService
@@ -35,10 +38,9 @@ class FlaskResource(ABC):
     def get_user(self):
         '''retrieves the user from the request'''
         token = request.headers['Authorization'].split()[1]
-        # TODO
-        decoded = jwt.decode(token, 'secret', algorithms=['HS256'])
-        username = decoded['username']
-        return username
+        decoded_token = auth.verify_id_token(token)
+        uid = decoded_token['uid']
+        return uid
 
     def metadata(self, api:str, method:str, user:str):
         '''generates standardized metadata'''

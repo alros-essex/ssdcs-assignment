@@ -37,11 +37,17 @@
       window.user = user;
       document.querySelector("#userEmail").innerHTML = user.email;
       user.getIdToken().then((res) => {
-        // const http = new XMLHttpRequest();
-        // http.open("GET", "localhost:PORT/ROUTE")
-        // http.setRequestHeader('Authorization', 'Bearer: ' + res);
-        // http.send();
-        console.log(res);
+        fetch('http://localhost:5000/experiments', {
+          headers: new Headers({
+              'Authorization': 'Bearer: ' + res,
+          }), 
+        })
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch((err) => {
+            console.log(err);
+          });
+
       }).catch((err) => {
         console.log(err);
       });
