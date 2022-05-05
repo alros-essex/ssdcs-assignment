@@ -11,6 +11,7 @@
   </form>
 
   <p id="userEmail"></p>
+  <p id="userToken"></p>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -37,6 +38,8 @@
       window.user = user;
       document.querySelector("#userEmail").innerHTML = user.email;
       user.getIdToken().then((res) => {
+        document.querySelector("#userToken").innerHTML = res
+        /*
         fetch('http://localhost:5000/experiments', {
           headers: new Headers({
               'Authorization': 'Bearer: ' + res,
@@ -47,7 +50,7 @@
           .catch((err) => {
             console.log(err);
           });
-
+        */
       }).catch((err) => {
         console.log(err);
       });

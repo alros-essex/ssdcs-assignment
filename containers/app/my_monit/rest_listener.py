@@ -27,9 +27,10 @@ class RestConfiguration():
 class FlaskResource(ABC):
     '''Base class for Flask Resources'''
 
-    def __init__(self, logging:Logging) -> None:
+    def __init__(self, user_service:UserService, logging:Logging) -> None:
         '''build the instance'''
         self._logging = logging
+        self._user_service = user_service
 
     def log_info(self, msg:str, metadata):
         '''logs at info level'''
@@ -40,7 +41,8 @@ class FlaskResource(ABC):
         token = request.headers['Authorization'].split()[1]
         decoded_token = auth.verify_id_token(token)
         uid = decoded_token['uid']
-        return uid
+        user = self._user_service.read_users_by_username(uid)
+        return user.user_id
 
     def metadata(self, api:str, method:str, user:str):
         '''generates standardized metadata'''
@@ -61,9 +63,11 @@ class FlaskResource(ABC):
 class MeasuresResource(FlaskResource):
     '''resource mapping the measures'''
 
-    def __init__(self, measures_service:MeasuresService, logging: Logging) -> None:
+    def __init__(self, user_service:UserService,
+                       measures_service:MeasuresService,
+                       logging: Logging) -> None:
         '''builds the instance'''
-        super().__init__(logging)
+        super().__init__(user_service = user_service, logging = logging)
         self._measure_service = measures_service
 
     def get(self, experiment_id:int, page:int):
@@ -80,9 +84,11 @@ class MeasuresResource(FlaskResource):
 class ExperimentResource(FlaskResource):
     '''resource mapping the experiments'''
 
-    def __init__(self, experiment_service:ExperimentService, logging: Logging) -> None:
+    def __init__(self, user_service:UserService,
+                       experiment_service:ExperimentService,
+                       logging: Logging) -> None:
         '''builds the instance'''
-        super().__init__(logging)
+        super().__init__(user_service = user_service, logging = logging)
         self._experiment_service = experiment_service
 
     def get(self):
@@ -118,9 +124,11 @@ class ExperimentResource(FlaskResource):
 class ExperimentAssociationResource(FlaskResource):
     '''resource mapping the association scientist-experiments'''
 
-    def __init__(self, experiment_service:ExperimentService, logging: Logging) -> None:
+    def __init__(self, user_service:UserService,
+                       experiment_service:ExperimentService,
+                       logging: Logging) -> None:
         '''builds the instance'''
-        super().__init__(logging)
+        super().__init__(user_service = user_service, logging = logging)
         self._experiment_service = experiment_service
 
     def get(self):
@@ -160,7 +168,7 @@ class UserResouce(FlaskResource):
 
     def __init__(self, user_service:UserService, logging: Logging) -> None:
         '''builds the instance'''
-        super().__init__(logging)
+        super().__init__(user_service = user_service, logging = logging)
         self._user_service = user_service
 
     def get(self):
@@ -217,15 +225,19 @@ class RestListener():
                  user_service:UserService,
                  logging: Logging) -> None:
         self._configuration = configuration
-        self._measure_resource = MeasuresResource(measures_service = measures_service,
+        self._measure_resource = MeasuresResource(user_service = user_service,
+                                                  measures_service = measures_service,
                                                   logging = logging)
-        self._experiment_resource = ExperimentResource(experiment_service = experiment_service,
+        self._experiment_resource = ExperimentResource(user_service = user_service,
+                                                       experiment_service = experiment_service,
                                                        logging = logging)
         self._user_resource = UserResouce(user_service = user_service, logging = logging)
         self._experiment_association_resource = ExperimentAssociationResource(
+                                                    user_service = user_service,
                                                     experiment_service = experiment_service,
                                                     logging = logging)
-        self._exception_resource = ExceptionResource(logging = logging)
+        self._exception_resource = ExceptionResource(user_service = user_service,
+                                                     logging = logging)
 
     def run(self):
         '''Main method that runs the listener'''

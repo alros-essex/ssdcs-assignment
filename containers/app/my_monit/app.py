@@ -1,5 +1,6 @@
 '''Main entrypoint for MyMonit'''
 
+import os
 import threading
 from dependency_injector.wiring import Provide, inject
 from dependency_injector import containers, providers
@@ -131,6 +132,10 @@ def init():
     # logstash
     container.config.logstash_host.from_env('LOGSTASH_HOST', default = 'localhost', as_ = str)
     container.config.logstash_port.from_env('LOGSTASH_PORT', default = 5959, as_ = int)
+    # firebase
+    if 'GOOGLE_APPLICATION_CREDENTIALS' not in os.environ:
+        # os.getcwd() is the whole project's root
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './containers/app/private_key.json'
 
     container.wire(modules=[__name__])
 
