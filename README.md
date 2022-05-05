@@ -108,7 +108,7 @@ start infra and flask
 
 the statics are in [static](static) (currently they are just placeholders 💩)
 
-### How to login ###
+### 👮 How to login 👮
 
 open http://localhost:5000/static/index.html and login with one of the 3 users:
 
