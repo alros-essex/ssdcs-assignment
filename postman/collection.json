@@ -179,6 +179,39 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "update experiment",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"EXP0001-mod\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/experiments/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"experiments",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -206,14 +239,50 @@
 			]
 		},
 		{
-			"name": "authentication",
+			"name": "scientist/experiment",
 			"item": [
 				{
-					"name": "authenticate",
+					"name": "retrieve scientists/ experiment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
 					"request": {
-						"auth": {
-							"type": "noauth"
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
 						},
+						"url": {
+							"raw": "{{url}}/scientists-experiments/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scientists-experiments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "retrieve scientists/ experiment Copy",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
 						"method": "POST",
 						"header": [
 							{
@@ -224,19 +293,61 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"username\":\"S001\"}"
+							"raw": ""
 						},
 						"url": {
-							"raw": "{{url}}/authenticate",
+							"raw": "{{url}}/scientists-experiments/2/S001",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"authenticate"
+								"scientists-experiments",
+								"2",
+								"S001"
 							]
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "_obsolete",
+			"item": [
+				{
+					"name": "authentication",
+					"item": [
+						{
+							"name": "authenticate",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"username\":\"S001\"}"
+								},
+								"url": {
+									"raw": "{{url}}/authenticate",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"authenticate"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}
