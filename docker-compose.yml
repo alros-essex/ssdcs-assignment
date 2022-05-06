@@ -18,10 +18,13 @@ services:
     - REST_HOST=0.0.0.0
     - LOGSTASH_HOST=logstash
     - LOGSTASH_PORT=5959
+    - GOOGLE_APPLICATION_CREDENTIALS=/firebase_config.json
     depends_on:
       - elasticsearch
       - rabbit
       - mysql
+    volume:
+      - ./containers/app/private_key.json:/firebase_config.json
 
   nginx:
     image: custom_nginx:latest

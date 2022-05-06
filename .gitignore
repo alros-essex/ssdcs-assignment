@@ -1,4 +1,5 @@
 .~lock*
 **/*.egg*
+**/__pycache__
 containers/app/build
 containers/app/reports

@@ -75,6 +75,10 @@ start infra:
 start the application:
 ```
 cd containers/app/
+# On Windows
+$Env:GOOGLE_APPLICATION_CREDENTIALS = "$(pwd)\private_key.json"
+# Other systens
+export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/private_key.json"
 python3 main.py
 ```
 
@@ -103,3 +107,14 @@ start infra and flask
 ```
 
 the statics are in [static](static) (currently they are just placeholders 💩)
+
+### 👮 How to login 👮
+
+open http://localhost:5000/static/index.html and login with one of the 3 users:
+
+|email            |password|user|type     |
+|-----------------|--------|----|---------|
+|aalcorn@home.cern|123456  |A001|ADMIN    |
+|phigg@home.cern  |123456  |S001|SCIENTIST|
+|kbouman@home.cern|123456  |S002|SCIENTIST|
+    
