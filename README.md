@@ -118,3 +118,12 @@ open http://localhost:5000/static/index.html and login with one of the 3 users:
 |phigg@home.cern  |123456  |S001|SCIENTIST|
 |kbouman@home.cern|123456  |S002|SCIENTIST|
     
+### How to generate the api docs ###
+
+The process is far from being perfect but here it is:
+
+* export the postman collection
+* convert it in [https://metamug.com/util/postman-to-swagger/](https://metamug.com/util/postman-to-swagger/)
+* fix it with [https://editor.swagger.io/#/](https://editor.swagger.io/#/)
+* save it in `swagger`
+* run `python3 tohtml.py > api.html`

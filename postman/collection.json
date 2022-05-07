@@ -26,7 +26,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"S011\",\n    \"name\": \"Foo Bar\",\n    \"username\": \"foo\",\n    \"email\": \"foo@bar.com\",\n    \"role\": \"SCIENTIST\"\n}"
+							"raw": "{\n    \"user_id\": \"S123\",\n    \"name\": \"Foo Bar\",\n    \"username\": \"firebaseUid\",\n    \"email\": \"foo@bar.com\",\n    \"role\": \"SCIENTIST\"\n}"
 						},
 						"url": {
 							"raw": "{{url}}/users/",
@@ -59,16 +59,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Upd Bar\",\n    \"username\": \"upd\",\n    \"email\": \"foo@localhost\"\n}"
+							"raw": "{\n    \"name\": \"Foo Bar\",\n    \"username\": \"firebaseUid\",\n    \"email\": \"foo@bar\"\n}"
 						},
 						"url": {
-							"raw": "{{url}}/users/S011",
+							"raw": "{{url}}/users/{{user_id}}",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"users",
-								"S011"
+								"{{user_id}}"
 							]
 						}
 					},
@@ -179,6 +179,39 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "update experiment",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"EXP0001\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/experiments/{{experiment_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"experiments",
+								"{{experiment_id}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -191,13 +224,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/measures/1",
+							"raw": "{{url}}/measures/{{experiment_id}}",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"measures",
-								"1"
+								"{{experiment_id}}"
 							]
 						}
 					},
@@ -206,14 +239,50 @@
 			]
 		},
 		{
-			"name": "authentication",
+			"name": "scientist/experiment",
 			"item": [
 				{
-					"name": "authenticate",
+					"name": "retrieve scientists/ experiment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
 					"request": {
-						"auth": {
-							"type": "noauth"
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
 						},
+						"url": {
+							"raw": "{{url}}/scientists-experiments/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scientists-experiments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "associate scientists to experiment",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
 						"method": "POST",
 						"header": [
 							{
@@ -224,15 +293,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"username\":\"S001\"}"
+							"raw": ""
 						},
 						"url": {
-							"raw": "{{url}}/authenticate",
+							"raw": "{{url}}/scientists-experiments/{{experiment_id}}/{{scientist_id}}",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"authenticate"
+								"scientists-experiments",
+								"{{experiment_id}}",
+								"{{scientist_id}}"
 							]
 						}
 					},
