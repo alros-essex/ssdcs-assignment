@@ -118,7 +118,7 @@ open http://localhost:5000/static/index.html and login with one of the 3 users:
 |phigg@home.cern  |123456  |S001|SCIENTIST|
 |kbouman@home.cern|123456  |S002|SCIENTIST|
     
-### How to generate the api docs ###
+### 📒 How to generate the api docs 📒
 
 The process is far from being perfect but here it is:
 
