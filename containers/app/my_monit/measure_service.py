@@ -15,7 +15,8 @@ class MeasuresService():
         measures = self._storage.read_measure(experiment_id = experiment_id,
                                               current_user = current_user)
         self._logging.info(msg = 'retrieved {len} measures',
-                           metadata = self._metadata(method = 'retrieve_measures', user = current_user),
+                           metadata = self._metadata(method = 'retrieve_measures',
+                                                     user = current_user),
                            params={ 'len': len(measures) })
         return [m.serialize() for m in measures]
 

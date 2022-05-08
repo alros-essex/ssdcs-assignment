@@ -67,9 +67,10 @@ class MeasuresResource(FlaskResource):
     def get(self, experiment_id:int):
         '''retrieve measures for an experiment'''
         user_id = self.get_user()
-        self._logging.info('called API', metadata = self.metadata(api = '/measures/<int:experiment_id>',
-                                                                  method = 'GET',
-                                                                  user = user_id))
+        self._logging.info('called API',
+                           metadata = self.metadata(api = '/measures/<int:experiment_id>',
+                                                    method = 'GET',
+                                                    user = user_id))
         measures = self._measure_service.retrieve_measures(experiment_id = experiment_id,
                                                             current_user = user_id)
         return self.to_json(measures), 200

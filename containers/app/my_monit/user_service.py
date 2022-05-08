@@ -3,7 +3,7 @@
 from .storage import Storage
 from .errors import AuthorizationException, InvalidArgument
 from .logging import Logging
-from .model import User, LoggingModel
+from .model import User
 
 class UserService():
     '''Main service managing users'''
@@ -25,7 +25,8 @@ class UserService():
         '''returns User based on his uid on Firebase'''
         user = self._storage.read_users_by_username(username)
         self._logging.info(msg = 'get_user_by_uuid: found {user}',
-                           metadata = self._metadata(method = 'read_users_by_username', user = None),
+                           metadata = self._metadata(method = 'read_users_by_username',
+                                                     user = None),
                            params={ 'user': user.user_id if user is not None else '<not-found>' })
         return user
 

@@ -1,6 +1,5 @@
 '''Experiments business logic'''
 
-from unicodedata import name
 from .user_service import UserService
 from .errors import AuthorizationException, InvalidArgument
 from .logging import Logging
@@ -21,7 +20,8 @@ class ExperimentService():
         '''returns all experiments'''
         experiments = self._storage.read_experiments(current_user = current_user)
         self._logging.info(msg = 'retrieved {len} experiments',
-                           metadata = self._metadata(method = 'retrieve_experiments', user = current_user),
+                           metadata = self._metadata(method = 'retrieve_experiments',
+                                                     user = current_user),
                            params={ 'len': len(experiments) })
         return [e.serialize() for e in experiments]
 
@@ -31,11 +31,13 @@ class ExperimentService():
             raise AuthorizationException
         experiment = Experiment(experiment_id = None, name = experiment_dict['name'])
         self._logging.info(msg = 'insert experiment: {experiment}',
-                           metadata = self._metadata(method = 'insert_experiment', user = current_user),
+                           metadata = self._metadata(method = 'insert_experiment',
+                                                     user = current_user),
                            params={ 'experiment': experiment })
         self._storage.insert_experiment(experiment)
 
-    def update_experiment(self, experiment_to_update:int, experiment_dict, current_user:str) -> None:
+    def update_experiment(self, experiment_to_update:int, experiment_dict,
+                          current_user:str) -> None:
         '''updates an experiment'''
         if not self._user_service.is_admin(current_user):
             raise AuthorizationException
@@ -48,7 +50,8 @@ class ExperimentService():
                                         experiment_id = current_experiment.experiment_id,
                                         name = experiment_dict['name'])
         self._logging.info(msg = 'update experiment: {updated_experiment}',
-                           metadata = self._metadata(method = 'update_experiment', user = current_user),
+                           metadata = self._metadata(method = 'update_experiment',
+                                                     user = current_user),
                            params={ 'updated_experiment': updated_experiment })
         self._storage.update_experiment(updated_experiment)
 
@@ -60,7 +63,8 @@ class ExperimentService():
             raise AuthorizationException
         associations = self._storage.read_associations()
         self._logging.info(msg = 'retrieved {len} associations',
-                           metadata = self._metadata(method = 'get_associations', user = current_user),
+                           metadata = self._metadata(method = 'get_associations',
+                                                     user = current_user),
                            params={ 'len': len(associations) })
         return associations
 

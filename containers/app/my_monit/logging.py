@@ -3,7 +3,6 @@
 from enum import Enum
 import logging
 import logstash
-import sys
 from .model import LoggingModel
 from colorama import Fore
 
@@ -23,7 +22,6 @@ class Logging():
     def __init__(self, host:str, port:int) -> None:
         logger = logging.getLogger('python-logstash-logger')
         logger.setLevel(logging.INFO)
-        #logger.addHandler(logstash.LogstashHandler(host, port, version=1))
         logger.addHandler(logstash.TCPLogstashHandler(host, port, version=1))
         self._logger = logger
 

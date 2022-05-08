@@ -1,7 +1,5 @@
 '''Module to manage the database'''
-from logging import Logger
 import time
-
 import mysql.connector
 from mysql.connector.errors import DatabaseError
 
@@ -39,10 +37,11 @@ class StorageConfiguration():
         return self._db_database
 
 class StorageConnector():
+    '''Utility class to connect to the db'''
 
     def __init__(self, storage_configuration:StorageConfiguration, logging:Logging) -> None:
         self._storage_configuration = storage_configuration
-        self._logging = Logging
+        self._logging = logging
 
     def connect(self):
         while True:
@@ -53,11 +52,11 @@ class StorageConnector():
                                            database = self._storage_configuration.database)
             except DatabaseError as ex:
                 print(ex)
-                self._log('database connection failed')    
+                self._log('database connection failed')
                 time.sleep(1)
 
     def _log(self, message:str):
-        self._logging.error(message, metadata = { 'service': 'database' })
+        self._logging.error(msg = message, metadata = { 'service': 'database' })
 
 class Storage():
     '''Main component exposing queries'''
@@ -195,13 +194,15 @@ class Storage():
                             WHERE us.ROLE = ro.ID''', {}, for_update = False)
         return [Storage._to_user(u) for u in cur]
 
-    def read_users_by_username(self, username:str):
+    def read_users_by_username(self, username:str) -> User:
+        '''return the user given its username'''
         cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
-                            FROM USERS us, ROLES ro
+                            FROM USERS us, ROLES ro 
                             WHERE us.ROLE = ro.ID AND us.USERNAME = %(username)s''',
                             { 'username': username },
                             for_update = False)
-        return [Storage._to_user(u) for u in cur]
+        users = [Storage._to_user(u) for u in cur]
+        return users[0] if len(users) == 1 else None
 
     def read_users_by_email(self, email:str):
         cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
@@ -220,17 +221,6 @@ class Storage():
                             { 'user_id': user_id },
                             for_update = False)
         return [r[0] for r in cur][0] == 1
-
-    def read_users_by_username(self, username:str) -> User:
-        '''return the user given its username'''
-        cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
-                            FROM USERS us, ROLES ro 
-                            WHERE us.ROLE = ro.ID
-                            AND us.USERNAME = %(username)s''',
-                            { 'username': username },
-                            for_update = False)
-        users = [Storage._to_user(u) for u in cur]
-        return users[0] if len(users) == 1 else None
 
     # Scientist/Experiment
 
