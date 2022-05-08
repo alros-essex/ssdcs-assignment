@@ -22,13 +22,15 @@ class TestMeasuresResource(unittest.TestCase):
 
     def setUp(self):
         self.measures_service = Mock()
+        self.user_service = Mock()
         self.log = Mock()
         self.measures = MeasuresResource(measures_service = self.measures_service,
+                                         user_service = self.user_service,
                                          logging = self.log)
         mock_flask_utilities(self.measures)
 
     def test_get(self):
-        _, ret = self.measures.get('exp', 1)
+        _, ret = self.measures.get('exp')
 
         self.assertEqual(200, ret)
         self.measures_service.retrieve_measures.assert_called()
@@ -39,9 +41,11 @@ class TestExperimentResource(unittest.TestCase):
 
     def setUp(self):
         self.experiment_service = Mock()
+        self.user_service = Mock()
         self.log = Mock()
         self.experiments = ExperimentResource(experiment_service = self.experiment_service,
-                                                  logging = self.log)
+                                              user_service = self.user_service,
+                                              logging = self.log)
         mock_flask_utilities(self.experiments)
 
     def test_get(self):
@@ -101,7 +105,8 @@ class TestExceptionResource(unittest.TestCase):
 
     def setUp(self):
         self.log = Mock()
-        self.exception = ExceptionResource(logging = self.log)
+        self.user_service = Mock()
+        self.exception = ExceptionResource(user_service = self.user_service, logging = self.log)
 
     def test_handle_error(self):
         _, ret = self.exception.handle_error('err', 'msg', 400)
@@ -114,9 +119,11 @@ class TestExperimentAssociationResource(unittest.TestCase):
 
     def setUp(self):
         self.log = Mock()
+        self.user_service = Mock()
         self.experiment_service = Mock()
         self.associations_srv = ExperimentAssociationResource(experiment_service = self.experiment_service,
-                                                          logging = self.log)
+                                                              user_service = self.user_service,
+                                                              logging = self.log)
         mock_flask_utilities(self.associations_srv)
 
     def test_get(self):
