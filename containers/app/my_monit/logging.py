@@ -54,7 +54,6 @@ class Logging():
         LoggingLevel.INFO: Fore.GREEN,
         LoggingLevel.DEBUG: Fore.GREEN
     }
-        
 
     @LoggingModel.is_logging
     def log(self, msg:str, metadata, level:LoggingLevel, params=None) -> None:
@@ -67,7 +66,17 @@ class Logging():
             }
             color = Logging._logging_color[level]
             print(f'{level} - {color}{extra}{Fore.RESET} - {formatted_msg}')
-            self._logger.info(msg = formatted_msg, extra = extra)
+
+            if level is LoggingLevel.DEBUG:
+                self._logger.debug(msg = formatted_msg, extra = extra)
+            elif level is LoggingLevel.INFO:
+                self._logger.info(msg = formatted_msg, extra = extra)
+            elif level is LoggingLevel.WARN:
+                self._logger.warn(msg = formatted_msg, extra = extra)
+            elif level is LoggingLevel.ERROR:
+                self._logger.error(msg = formatted_msg, extra = extra)
+            else:
+                self._logger.critical(msg = formatted_msg, extra = extra)
         except Exception as ex:
             print(f'{ex}')
 

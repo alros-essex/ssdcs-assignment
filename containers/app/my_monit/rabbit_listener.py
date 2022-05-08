@@ -78,7 +78,6 @@ class RabbitConnector():
             try:
                 return pika.BlockingConnection(pika.ConnectionParameters(configuration.url))
             except pika.exceptions.AMQPError as error:
-                # TODO verify that this exception is enough
                 print(error)
                 time.sleep(5)
 

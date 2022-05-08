@@ -5,6 +5,7 @@ from unittest.mock import Mock, MagicMock
 
 from my_monit.user_service import UserService
 from my_monit.model import User
+from my_monit.errors import AuthorizationException, InvalidArgument
 
 class TestUserService(unittest.TestCase):
     '''tests for user service'''
@@ -33,6 +34,18 @@ class TestUserService(unittest.TestCase):
         user_service.is_admin = MagicMock(return_value = True)
         users = user_service.retrieve_users('usr')
         self.assertEquals(1, len(users))
+
+    def test_retrieve_users_unauthorised(self):
+        '''test retrieval from unauthorised user'''
+        user_service = UserService(storage = self.storage, logging = Mock())
+        self.storage.read_users = MagicMock(return_value = [User(user_id='x',
+                                                                 name='x',
+                                                                 username='x',
+                                                                 email='x',
+                                                                 role='x')])
+        user_service.is_admin = MagicMock(return_value = False)
+        
+        self.assertRaises(AuthorizationException, user_service.retrieve_users, 'usr')
 
     def test_insert_user(self):
         '''test insert logic'''
@@ -67,6 +80,46 @@ class TestUserService(unittest.TestCase):
         },'x')
         
         self.storage.update_user.assert_called_with(User('x','y','y','y','x'))
+
+    def test_read_users_by_username(self):
+        '''test user retrieval logic'''
+        user_service = UserService(storage = self.storage, logging = Mock())
+        user = User('x','x','x','x','x')
+        self.storage.read_users_by_username = MagicMock(return_value = user)
+
+        result = user_service.read_users_by_username('x')
+        
+        self.assertEquals(user, result)
+
+    def test_retrieve_user(self):
+        '''test user retrieval logic'''
+        user_service = UserService(storage = self.storage, logging = Mock())
+        user = User('x','x','x','x','x')
+        self.storage.read_user = MagicMock(return_value = user)
+
+        result = user_service.retrieve_user('x', 'y')
+        
+        self.assertEquals(user, result)
+
+    def test_retrieve_users(self):
+        '''test user retrieval logic'''
+        user_service = UserService(storage = self.storage, logging = Mock())
+        user_service.is_admin = MagicMock(return_value = True)
+        users = [User('x','x','x','x','x'),User('x','x','x','x','x')]
+        self.storage.read_users = MagicMock(return_value = users)
+
+        result = user_service.retrieve_users('x')
+        
+        self.assertEquals(len(users), len(result))
+
+    def test_retrieve_users_unautorised(self):
+        '''test user retrieval logic'''
+        user_service = UserService(storage = self.storage, logging = Mock())
+        user_service.is_admin = MagicMock(return_value = False)
+        users = [User('x','x','x','x','x'),User('x','x','x','x','x')]
+        self.storage.read_users = MagicMock(return_value = users)
+        
+        self.assertRaises(AuthorizationException, user_service.retrieve_users,'x')
 
 if __name__ == '__main__':
     unittest.main()

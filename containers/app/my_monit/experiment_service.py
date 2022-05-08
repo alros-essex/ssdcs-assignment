@@ -69,7 +69,6 @@ class ExperimentService():
         if not self._user_service.is_admin(current_user):
             raise AuthorizationException
         user = self._user_service.retrieve_user(user_id = scientist, current_user = current_user)
-        # TODO make an enum
         if user.role != 'SCIENTIST':
             raise InvalidArgument
         self._logging.info(msg = 'associating scientist {scientist} to experiment {experiment}',
