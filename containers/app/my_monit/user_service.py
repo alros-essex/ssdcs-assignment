@@ -25,7 +25,7 @@ class UserService():
         '''returns User based on his uid on Firebase'''
         user = self._storage.read_users_by_username(username)
         self._logging.info(msg = 'get_user_by_uuid: found {user}',
-                           metadata = self._metadata(method = 'is_admin', user = None),
+                           metadata = self._metadata(method = 'read_users_by_username', user = None),
                            params={ 'user': user.user_id if user is not None else '<not-found>' })
         return user
 
