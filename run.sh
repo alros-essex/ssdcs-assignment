@@ -1,20 +1,22 @@
 #!/bin/sh
 
-BUILD_NGINX=`false`
-BUILD_APP=`false`
+# build nginx
+cd containers/nginx/
+docker build . -t custom_nginx
+cd ../..
 
-if $BUILD_NGINX
-then
-    cd containers/nginx/
-    docker build . -t custom_nginx
-    cd ../..
-fi
+# build mysql
+cd containers/mysql
+docker build . -t custom_mysql
+cd ../..
 
-if $BUILD_APP
-then
-    cd containers/app
-    docker build . -t safe_repository
-    cd ../..
-fi
+# build app
+rm -fr containers/app/.static-tmp
+cp -R static containers/app/.static-tmp
+cd containers/app
+docker build . -t safe_repository
+cd ../..
+
+
 
 docker-compose up

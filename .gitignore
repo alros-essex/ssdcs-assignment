@@ -3,3 +3,4 @@
 **/__pycache__
 containers/app/build
 containers/app/reports
+containers/app/.static-tmp

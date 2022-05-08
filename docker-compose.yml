@@ -45,7 +45,7 @@ services:
   mysql:
     # for M1
     # platform: linux/x86_64
-    image: mysql:5.7
+    image: custom_mysql:latest
     container_name: mysql
     command: mysqld --sql_mode="" --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
@@ -54,6 +54,8 @@ services:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=password
+    depends_on:
+      - logstash
 
   elasticsearch:
     image: elasticsearch:6.5.4
