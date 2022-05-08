@@ -4,6 +4,7 @@ from abc import ABC
 from flask import Flask, request, jsonify
 
 from firebase_admin import auth
+from flask_cors import CORS
 
 from .errors import AuthorizationException, DbIntegrityError, InvalidArgument
 from .logging import Logging
@@ -237,6 +238,7 @@ class RestListener():
         '''Main method that runs the listener'''
 
         app = Flask('safe repository')
+        CORS(app)
 
         # Measures
 

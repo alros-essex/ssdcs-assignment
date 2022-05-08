@@ -4,3 +4,5 @@
 containers/app/build
 containers/app/reports
 containers/app/.static-tmp
+.idea
+node_modules

@@ -5,13 +5,16 @@
 <div *ngIf="login">
 
     <label for="username">Username: </label>
-    <input type="text" id="username" name="username" [(ngModel)]="login.username" placeholder="{{login.username}}"><br><br> 
+    <input type="text" id="username" name="username" [(ngModel)]="login.username" placeholder="{{login.username}}"><br><br>
     <label for="password">Password: </label>
     <input type="text" id="password" name="password" [(ngModel)]="login.password" placeholder="{{login.username}}"><br><br>
-   
-    <button type="button" value="Login" (click)="dologin()">login</button>
+
+    <button type="button" value="Login" (click)="do_login()">login</button>
 
 </div>
-    
+
+<div *ngIf="bearerToken">
+  Bearer token: {{bearerToken}}
+</div>
 
 <html>

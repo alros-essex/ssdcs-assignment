@@ -1,1 +1,6 @@
-<p>measure works!</p>
+<div *ngFor="let m of measures">
+  <p>Type: {{m.measure_type}}</p>
+  <p>Timestamp: {{m.timestamp}}</p>
+  <p>Experiment: {{m.experiment}}</p>
+  <p>Value: {{m.value}}</p>
+</div>

@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 
-<h1>Experiments</h1>
+<h1>Experiments and Measures</h1>
+
+<div *ngFor="let e of experiments">
+  <a routerLink="/measures/{{e.experiment_id}}">{{e.experiment_id}}, {{e.name}}</a>
+</div>
+<!--<a *ngFor="let e of experiments" routerLink=""> {{e.experiment_id}}, {{e.name}} </a>-->
+<button (click)="getexperiments()">Get experiments</button>
 
 
-<li *ngFor="let e of experiments"> {{e.name}} </li>
+
+<div>
+  <label for="new_experiment">Experiment name:</label>
+  <input type="text" id="new_experiment" name="new_experiment" [(ngModel)]="newExperiment.name"><br><br>
+  <button (click)="save_experiment()">Save experiment</button>
+</div>

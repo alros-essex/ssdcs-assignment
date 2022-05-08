@@ -9,6 +9,7 @@ import { MeasureComponent } from './measure/measure.component';
 import { UsersComponent } from './users/users.component';
 import { ExperimentsComponent } from './experiments/experiments.component';
 import { LoginComponent } from './login/login.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -18,11 +19,12 @@ import { LoginComponent } from './login/login.component';
     ExperimentsComponent,
     LoginComponent
   ],
-  imports: [
-    HttpClientModule,
-    BrowserModule,
-    AppRoutingModule
-  ],
+    imports: [
+        HttpClientModule,
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

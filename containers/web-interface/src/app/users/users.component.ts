@@ -13,14 +13,14 @@ export class UsersComponent implements OnInit {
   constructor(private rest: RestClientService){}
   //declaring a variable and get the rest service to assign measures to the variable
   //subscribe to show an error
-    bleh(){  
+    bleh(){
     var measures: Measure[]
-    this.rest.getmeasures().subscribe(m => measures = m);
+    this.rest.get_measures().subscribe(m => measures = m);
     }
-  
+
     ngOnInit(): void {
     }
-   
+
   }
 
 
