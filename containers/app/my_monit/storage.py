@@ -1,6 +1,8 @@
 '''Module to manage the database'''
+import time
 
 import mysql.connector
+from mysql.connector.errors import DatabaseError
 
 from .model import Measure, Experiment, User
 from .errors import DbIntegrityError
@@ -38,10 +40,18 @@ class Storage():
     '''Main component exposing queries'''
 
     def __init__(self, storage_configuration:StorageConfiguration) -> None:
-        self.cnx = mysql.connector.connect(user = storage_configuration.user,
+        def connect():
+            while True:
+                try:
+                    return mysql.connector.connect(user = storage_configuration.user,
                                            password = storage_configuration.password,
                                            host = storage_configuration.host,
                                            database = storage_configuration.database)
+                except DatabaseError as ex:
+                    print(ex)
+                    time.sleep(1)
+        self.cnx = connect()
+
 
     # Measures
 
