@@ -2,9 +2,7 @@
 
 from abc import ABC
 from flask import Flask, request, jsonify
-import jwt
 
-import firebase_admin
 from firebase_admin import auth
 
 from .errors import AuthorizationException, DbIntegrityError, InvalidArgument

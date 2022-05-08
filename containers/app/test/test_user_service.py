@@ -91,7 +91,7 @@ class TestUserService(unittest.TestCase):
         
         self.assertEquals(user, result)
 
-    def test_retrieve_users(self):
+    def test_retrieve_user(self):
         '''test user retrieval logic'''
         user_service = UserService(storage = self.storage, logging = Mock())
         user = User('x','x','x','x','x')
@@ -100,6 +100,26 @@ class TestUserService(unittest.TestCase):
         result = user_service.retrieve_user('x', 'y')
         
         self.assertEquals(user, result)
+
+    def test_retrieve_users(self):
+        '''test user retrieval logic'''
+        user_service = UserService(storage = self.storage, logging = Mock())
+        user_service.is_admin = MagicMock(return_value = True)
+        users = [User('x','x','x','x','x'),User('x','x','x','x','x')]
+        self.storage.read_users = MagicMock(return_value = users)
+
+        result = user_service.retrieve_users('x')
+        
+        self.assertEquals(len(users), len(result))
+
+    def test_retrieve_users_unautorised(self):
+        '''test user retrieval logic'''
+        user_service = UserService(storage = self.storage, logging = Mock())
+        user_service.is_admin = MagicMock(return_value = False)
+        users = [User('x','x','x','x','x'),User('x','x','x','x','x')]
+        self.storage.read_users = MagicMock(return_value = users)
+        
+        self.assertRaises(AuthorizationException, user_service.retrieve_users,'x')
 
 if __name__ == '__main__':
     unittest.main()
