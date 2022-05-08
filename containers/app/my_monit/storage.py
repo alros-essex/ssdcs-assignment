@@ -1,4 +1,5 @@
 '''Module to manage the database'''
+from logging import Logger
 import time
 
 import mysql.connector
@@ -37,23 +38,34 @@ class StorageConfiguration():
         '''returns db name'''
         return self._db_database
 
+class StorageConnector():
+
+    def __init__(self, storage_configuration:StorageConfiguration, logging:Logging) -> None:
+        self._storage_configuration = storage_configuration
+        self._logging = Logging
+
+    def connect(self):
+        while True:
+            try:
+                return mysql.connector.connect(user = self._storage_configuration.user,
+                                           password = self._storage_configuration.password,
+                                           host = self._storage_configuration.host,
+                                           database = self._storage_configuration.database)
+            except DatabaseError as ex:
+                print(ex)
+                self._log('database connection failed')    
+                time.sleep(1)
+
+    def _log(self, message:str):
+        self._logging.error(message, metadata = { 'service': 'database' })
+
 class Storage():
     '''Main component exposing queries'''
 
-    def __init__(self, storage_configuration:StorageConfiguration, logging:Logging) -> None:
+    def __init__(self, storage_connector:StorageConnector,
+                 logging:Logging) -> None:
         self._logging = logging
-        def connect():
-            while True:
-                try:
-                    return mysql.connector.connect(user = storage_configuration.user,
-                                           password = storage_configuration.password,
-                                           host = storage_configuration.host,
-                                           database = storage_configuration.database)
-                except DatabaseError as ex:
-                    print(ex)
-                    self._log('database connection failed')    
-                    time.sleep(1)
-        self.cnx = connect()
+        self.cnx = storage_connector.connect()
 
 
     # Measures

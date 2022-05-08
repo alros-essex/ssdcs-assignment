@@ -11,7 +11,7 @@ from .user_service import UserService
 from .rabbit_listener import RabbitListener, RabbitConfiguration, RabbitMessageProcessor
 from .experiment_service import ExperimentService
 from .measure_service import MeasuresService
-from .storage import Storage, StorageConfiguration
+from .storage import Storage, StorageConfiguration, StorageConnector
 from .rest_listener import RestListener, RestConfiguration
 from .logging import Logging
 
@@ -49,9 +49,16 @@ class Container(containers.DeclarativeContainer):
         rest_host = config.rest_host
     )
 
+    storage_connector = providers.Singleton(
+        StorageConnector,
+        storage_configuration = storage_configuration,
+        logging = logging
+    )
+
     storage = providers.Singleton(
         Storage,
-        storage_configuration = storage_configuration
+        storage_connector = storage_connector,
+        logging = logging
     )
 
     message_processor = providers.Singleton(

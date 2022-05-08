@@ -9,9 +9,6 @@ from my_monit.rest_listener import UserResouce
 from my_monit.rest_listener import ExceptionResource
 from my_monit.rest_listener import ExperimentAssociationResource
 
-
-from my_monit.model import Measure
-
 def mock_flask_utilities(service):
     service.get_user = MagicMock(return_value = 'usr')
     service.to_json = MagicMock(return_value = 'json')
