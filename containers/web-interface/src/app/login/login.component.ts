@@ -5,6 +5,7 @@ import {Input} from '@angular/core';
 import {initializeApp} from 'firebase/app';
 import {getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth';
 import {FirebaseApp} from '@angular/fire/app';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +31,7 @@ export class LoginComponent implements OnInit {
     measurementId: 'G-T8DCDWNTQJ'
   };
 
-  constructor(private rest: RestClientService) {
+  constructor(private rest: RestClientService, private router: Router) {
   } // linking rest client to login component
   // create a login function
   do_login(): void {
@@ -44,6 +45,7 @@ export class LoginComponent implements OnInit {
           .then(token => {
             this.bearerToken = token;
             this.rest.set_bearer_token(token);
+            this.router.navigate(['/experiments']);
           });
       });
   }
