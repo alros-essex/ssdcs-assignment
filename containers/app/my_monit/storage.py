@@ -1,9 +1,11 @@
 '''Module to manage the database'''
-
+import time
 import mysql.connector
+from mysql.connector.errors import DatabaseError
 
 from .model import Measure, Experiment, User
 from .errors import DbIntegrityError
+from .logging import Logging
 
 class StorageConfiguration():
     '''Database configuration'''
@@ -34,20 +36,41 @@ class StorageConfiguration():
         '''returns db name'''
         return self._db_database
 
+class StorageConnector():
+    '''Utility class to connect to the db'''
+
+    def __init__(self, storage_configuration:StorageConfiguration, logging:Logging) -> None:
+        self._storage_configuration = storage_configuration
+        self._logging = logging
+
+    def connect(self):
+        while True:
+            try:
+                return mysql.connector.connect(user = self._storage_configuration.user,
+                                           password = self._storage_configuration.password,
+                                           host = self._storage_configuration.host,
+                                           database = self._storage_configuration.database)
+            except DatabaseError as ex:
+                print(ex)
+                self._log('database connection failed')
+                time.sleep(1)
+
+    def _log(self, message:str):
+        self._logging.error(msg = message, metadata = { 'service': 'database' })
+
 class Storage():
     '''Main component exposing queries'''
 
-    def __init__(self, storage_configuration:StorageConfiguration) -> None:
-        self.cnx = mysql.connector.connect(user = storage_configuration.user,
-                                           password = storage_configuration.password,
-                                           host = storage_configuration.host,
-                                           database = storage_configuration.database)
+    def __init__(self, storage_connector:StorageConnector,
+                 logging:Logging) -> None:
+        self._logging = logging
+        self.cnx = storage_connector.connect()
+
 
     # Measures
 
-    def read_measure(self, experiment_id:int, page:int, current_user:str):
+    def read_measure(self, experiment_id:int, current_user:str):
         '''returns measures'''
-        #TODO add pagination
         cur = self._execute('''SELECT ex.NAME as EXP_NAME, me.TIMESTAMP,
                             me.MEASURE_VALUE, mt.NAME as MSR_TYPE
                             FROM MEASURES me, EXPERIMENTS ex, MEASURE_TYPES mt, USER_EXPERIMENTS ue
@@ -171,13 +194,15 @@ class Storage():
                             WHERE us.ROLE = ro.ID''', {}, for_update = False)
         return [Storage._to_user(u) for u in cur]
 
-    def read_users_by_username(self, username:str):
+    def read_users_by_username(self, username:str) -> User:
+        '''return the user given its username'''
         cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
-                            FROM USERS us, ROLES ro
+                            FROM USERS us, ROLES ro 
                             WHERE us.ROLE = ro.ID AND us.USERNAME = %(username)s''',
                             { 'username': username },
                             for_update = False)
-        return [Storage._to_user(u) for u in cur]
+        users = [Storage._to_user(u) for u in cur]
+        return users[0] if len(users) == 1 else None
 
     def read_users_by_email(self, email:str):
         cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
@@ -196,17 +221,6 @@ class Storage():
                             { 'user_id': user_id },
                             for_update = False)
         return [r[0] for r in cur][0] == 1
-
-    def read_users_by_username(self, username:str) -> User:
-        '''return the user given its username'''
-        cur = self._execute('''SELECT us.ID, us.NAME, us.USERNAME, us.EMAIL, ro.NAME
-                            FROM USERS us, ROLES ro 
-                            WHERE us.ROLE = ro.ID
-                            AND us.USERNAME = %(username)s''',
-                            { 'username': username },
-                            for_update = False)
-        users = [Storage._to_user(u) for u in cur]
-        return users[0] if len(users) == 1 else None
 
     # Scientist/Experiment
 
@@ -271,8 +285,11 @@ class Storage():
         try:
             cur.execute(statement, params)
         except mysql.connector.IntegrityError as exception:
-            #TODO proper logging
+            self._log(f'database integrity error for {statement}')
             raise DbIntegrityError from exception
         if for_update:
             self.cnx.commit()
         return cur
+
+    def _log(self, message:str):
+        self._logging.error(message, metadata = { 'service': 'database' })

@@ -1,11 +1,13 @@
 '''Contains the shared model'''
 
-class LoggingModel:
+import threading
+from enum import Enum
 
-    from enum import Enum
+class LoggingModel:
+    '''Context information for the logging'''
 
     class Context(Enum):
-        NORMAL = 'normal',
+        NORMAL = 'normal'
         LOG = 'logging'
 
     Context.secure_context = {}
@@ -24,7 +26,6 @@ class LoggingModel:
 
     @staticmethod
     def _get_context_value():
-        import threading
         thread_id = threading.get_native_id()
         context = LoggingModel._get_context()
         if thread_id not in context:
@@ -33,7 +34,6 @@ class LoggingModel:
 
     @staticmethod
     def _set_context_value(value:Context):
-        import threading
         thread_id = threading.get_native_id()
         context = LoggingModel._get_context()
         context[thread_id] = value
@@ -77,10 +77,10 @@ class Measure():
     def serialize(self):
         '''serialize into a dict'''
         return {
-            "measure_type": self.measure_type,
-            "timestamp": self.timestamp,
-            "experiment": self.experiment,
-            "value": self.value
+            'measure_type': self.measure_type,
+            'timestamp': self.timestamp,
+            'experiment': self.experiment,
+            'value': self.value
         }
 
     def __eq__(self, __o: object) -> bool:
@@ -116,8 +116,8 @@ class Experiment():
     def serialize(self):
         '''serialize into a dict'''
         return {
-            "experiment_id": self._experiment_id,
-            "name": self._name
+            'experiment_id': self._experiment_id,
+            'name': self._name
         }
 
     def __eq__(self, __o: object) -> bool:
@@ -185,11 +185,11 @@ class User():
     def serialize(self):
         '''serialize into a dict'''
         return {
-            "user_id": self._user_id,
-            "name": self._name,
-            "username": self._username,
-            "email": self._email,
-            "role": self._role
+            'user_id': self._user_id,
+            'name': self._name,
+            'username': self._username,
+            'email': self._email,
+            'role': self._role
         }
 
     def __eq__(self, __o: object) -> bool:

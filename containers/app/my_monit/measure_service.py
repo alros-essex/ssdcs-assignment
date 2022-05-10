@@ -10,13 +10,13 @@ class MeasuresService():
         self._storage = storage
         self._logging = logging
 
-    def retrieve_measures(self, experiment_id:int, current_user:str, page:int):
+    def retrieve_measures(self, experiment_id:int, current_user:str):
         '''Returns an array of measures'''
         measures = self._storage.read_measure(experiment_id = experiment_id,
-                                              page = page,
                                               current_user = current_user)
         self._logging.info(msg = 'retrieved {len} measures',
-                           metadata = self._metadata(method = 'retrieve_measures', user = current_user),
+                           metadata = self._metadata(method = 'retrieve_measures',
+                                                     user = current_user),
                            params={ 'len': len(measures) })
         return [m.serialize() for m in measures]
 

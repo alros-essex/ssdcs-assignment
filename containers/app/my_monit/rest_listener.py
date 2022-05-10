@@ -2,9 +2,7 @@
 
 from abc import ABC
 from flask import Flask, request, jsonify
-import jwt
 
-import firebase_admin
 from firebase_admin import auth
 
 from .errors import AuthorizationException, DbIntegrityError, InvalidArgument
@@ -66,15 +64,15 @@ class MeasuresResource(FlaskResource):
         super().__init__(user_service = user_service, logging = logging)
         self._measure_service = measures_service
 
-    def get(self, experiment_id:int, page:int):
+    def get(self, experiment_id:int):
         '''retrieve measures for an experiment'''
         user_id = self.get_user()
-        self._logging.info('called API', metadata = self.metadata(api = '/measures/<int:experiment_id>',
-                                                                  method = 'GET',
-                                                                  user = user_id))
+        self._logging.info('called API',
+                           metadata = self.metadata(api = '/measures/<int:experiment_id>',
+                                                    method = 'GET',
+                                                    user = user_id))
         measures = self._measure_service.retrieve_measures(experiment_id = experiment_id,
-                                                            current_user = user_id,
-                                                            page = page)
+                                                            current_user = user_id)
         return self.to_json(measures), 200
 
 class ExperimentResource(FlaskResource):
@@ -240,30 +238,12 @@ class RestListener():
 
         app = Flask('safe repository')
 
-        # Login
-
-        @app.route('/login/', methods=['POST'])
-        def create_login_user():
-            '''logging in'''
-            print(request)
-            return 'created', 201
-
-        @app.route('/authenticate', methods=['POST'])
-        def authenticate():
-            '''returns a jwt token'''
-            user = request.json['username']
-            # TODO replace the secret
-            token = { 'token': jwt.encode({'username': user}, 'secret', algorithm='HS256') }
-            return jsonify(token), 200
-
         # Measures
 
         @app.route('/measures/<int:experiment_id>', methods=['GET'])
         def get_measures(experiment_id:int):
             '''retrieve measures for an experiment'''
-            # TODO
-            page = 1
-            return self._measure_resource.get(experiment_id = experiment_id, page = page)
+            return self._measure_resource.get(experiment_id = experiment_id)
 
         # Experiments
 

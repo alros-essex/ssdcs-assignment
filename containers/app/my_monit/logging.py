@@ -3,7 +3,6 @@
 from enum import Enum
 import logging
 import logstash
-import sys
 from .model import LoggingModel
 from colorama import Fore
 
@@ -23,7 +22,6 @@ class Logging():
     def __init__(self, host:str, port:int) -> None:
         logger = logging.getLogger('python-logstash-logger')
         logger.setLevel(logging.INFO)
-        #logger.addHandler(logstash.LogstashHandler(host, port, version=1))
         logger.addHandler(logstash.TCPLogstashHandler(host, port, version=1))
         self._logger = logger
 
@@ -54,7 +52,6 @@ class Logging():
         LoggingLevel.INFO: Fore.GREEN,
         LoggingLevel.DEBUG: Fore.GREEN
     }
-        
 
     @LoggingModel.is_logging
     def log(self, msg:str, metadata, level:LoggingLevel, params=None) -> None:
@@ -67,7 +64,17 @@ class Logging():
             }
             color = Logging._logging_color[level]
             print(f'{level} - {color}{extra}{Fore.RESET} - {formatted_msg}')
-            self._logger.info(msg = formatted_msg, extra = extra)
+
+            if level is LoggingLevel.DEBUG:
+                self._logger.debug(msg = formatted_msg, extra = extra)
+            elif level is LoggingLevel.INFO:
+                self._logger.info(msg = formatted_msg, extra = extra)
+            elif level is LoggingLevel.WARN:
+                self._logger.warn(msg = formatted_msg, extra = extra)
+            elif level is LoggingLevel.ERROR:
+                self._logger.error(msg = formatted_msg, extra = extra)
+            else:
+                self._logger.critical(msg = formatted_msg, extra = extra)
         except Exception as ex:
             print(f'{ex}')
 
