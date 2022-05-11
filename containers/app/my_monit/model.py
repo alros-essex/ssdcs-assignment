@@ -41,7 +41,8 @@ class LoggingModel:
     @staticmethod
     def do_not_log(func):
         def inner(*args, **kwargs):
-            return func(*args, **kwargs) if LoggingModel._get_context_value() == LoggingModel.Context.NORMAL else '***'
+            return func(*args, **kwargs) if LoggingModel._get_context_value() == \
+                   LoggingModel.Context.NORMAL else '***'
         return inner
 
 class Measure():
@@ -131,7 +132,7 @@ class Experiment():
         return not self.__eq__(__o)
 
     def __str__(self) -> str:
-        return f'Experiment: experiment_id={self.experiment_id} name={self.name}' 
+        return f'Experiment: experiment_id={self.experiment_id} name={self.name}'
 
 class User():
     '''Models a user'''
@@ -209,4 +210,6 @@ class User():
         return self.__str__()
 
     def __str__(self) -> str:
-        return f'User: user_id={self.user_id} name={self.name} username={self.username} email={self.email} role={self.role}'
+        return f'User: user_id={self.user_id} \
+                 name={self.name} username={self.username} \
+                 email={self.email} role={self.role}'
