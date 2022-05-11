@@ -70,7 +70,7 @@ class Logging():
             elif level is LoggingLevel.INFO:
                 self._logger.info(msg = formatted_msg, extra = extra)
             elif level is LoggingLevel.WARN:
-                self._logger.warn(msg = formatted_msg, extra = extra)
+                self._logger.warning(msg = formatted_msg, extra = extra)
             elif level is LoggingLevel.ERROR:
                 self._logger.error(msg = formatted_msg, extra = extra)
             else:

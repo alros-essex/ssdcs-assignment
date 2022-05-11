@@ -1,0 +1,6 @@
+************* Module my_monit.logging
+my_monit/logging.py:78:15: W0703: Catching too general exception Exception (broad-except)
+
+------------------------------------------------------------------
+Your code has been rated at 9.98/10 (previous run: 9.16/10, +0.83)
+

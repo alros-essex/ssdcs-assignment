@@ -2,7 +2,7 @@
 
 from my_monit.logging import Logging
 import unittest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock
 
 class TestLogging(unittest.TestCase):
 
@@ -30,7 +30,7 @@ class TestLogging(unittest.TestCase):
             'level': 'WARN',
             'metadata': {}
         }
-        logging._logger.warn.assert_called_with(msg = 'test', extra = expected)
+        logging._logger.warning.assert_called_with(msg = 'test', extra = expected)
 
         logging.error('test',{})
         expected = {
