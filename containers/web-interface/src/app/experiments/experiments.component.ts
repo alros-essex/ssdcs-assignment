@@ -39,6 +39,7 @@ export class ExperimentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getexperiments();
   }
 
 }

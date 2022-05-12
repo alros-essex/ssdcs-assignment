@@ -5,10 +5,6 @@
 <div *ngFor="let e of experiments">
   <a routerLink="/measures/{{e.experiment_id}}">{{e.experiment_id}}, {{e.name}}</a>
 </div>
-<!--<a *ngFor="let e of experiments" routerLink=""> {{e.experiment_id}}, {{e.name}} </a>-->
-<button (click)="getexperiments()">Get experiments</button>
-
-
 
 <div>
   <label for="new_experiment">Experiment name:</label>

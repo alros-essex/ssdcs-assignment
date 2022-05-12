@@ -1,7 +1,8 @@
 '''REST APIs'''
 
 from abc import ABC
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
+import os.path
 
 from firebase_admin import auth
 from flask_cors import CORS
@@ -239,6 +240,17 @@ class RestListener():
 
         app = Flask('safe repository')
         CORS(app)
+
+        # Web interface
+
+        @app.route('/', defaults={'path': ''})
+        @app.route('/<string:path>')
+        @app.route('/<path:path>')
+        def static_proxy(path):
+            if os.path.isfile('static/' + path):
+                return send_from_directory('static', path)
+            else:
+                return app.send_static_file('index.html')
 
         # Measures
 

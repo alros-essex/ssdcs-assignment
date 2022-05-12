@@ -74,9 +74,12 @@ export class RestClientService {
     console.log(body);
 
     this.http.post<any>(url, body, {headers: this.make_headers()})
-      .pipe(response => {
-        console.log(response);
-        return response;
+      .subscribe(value => {
+        console.log(value);
       });
+      // .pipe(response => {
+      //   console.log(response);
+      //   return response;
+      // });
   }
 }
