@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
-import { logindetails } from './login/logindetails';
-import { Experiments } from './experiments/experiments';
-import { Measure } from './measure';
+import {logindetails} from './login/logindetails';
+import {Experiments} from './experiments/experiments';
+import {Measure} from './measure';
 
 
 @Injectable({
@@ -20,13 +20,19 @@ export class RestClientService {
   };
 
   private bearerToken?: string;
+
 // Make http class in the client
 
   constructor(private http: HttpClient) {
   }
 
-  set_bearer_token(token: string): void {
-    this.bearerToken = token;
+  private set_bearer_token(): void {
+    console.log('Rest service has an unassigned token. Checking session for token');
+    if (!this.bearerToken) {
+      const token = sessionStorage.getItem('token');
+      console.log(`Token found! ${token}`);
+      this.bearerToken = token;
+    }
   }
 
   private make_headers(): HttpHeaders {
@@ -40,6 +46,7 @@ export class RestClientService {
 
   // get login details and add an argument that takes in login details
   getlogin(details: logindetails): Observable<logindetails> {
+    this.set_bearer_token();
     const url = `${this.apiUrl}/login`;
     console.log(details);
     console.log(url);
@@ -50,11 +57,13 @@ export class RestClientService {
   // ngOnInit(): void {}
 // get array of measures
   get_measures(): Observable<Measure[]> {
+    this.set_bearer_token();
     const url = `${this.apiUrl}/measures/`;
     return this.http.get<Measure[]>(url, {headers: this.make_headers()});
   }
 
   get_measure_for_experiment(experimentId: string): Observable<Measure[]> {
+    this.set_bearer_token();
     const url = `${this.apiUrl}/measures/${experimentId}`;
 
     console.log(`Trying for ${url}`);
@@ -62,11 +71,13 @@ export class RestClientService {
   }
 
   get_experiments(): Observable<Experiments[]> {
+    this.set_bearer_token();
     const url = `${this.apiUrl}/experiments/`;
     return this.http.get<Experiments[]>(url, {headers: this.make_headers()});
   }
 
   save_experiment(name: string): void {
+    this.set_bearer_token();
     const url = `${this.apiUrl}/experiments/`;
     const body = {name};
 
@@ -77,9 +88,5 @@ export class RestClientService {
       .subscribe(value => {
         console.log(value);
       });
-      // .pipe(response => {
-      //   console.log(response);
-      //   return response;
-      // });
   }
 }

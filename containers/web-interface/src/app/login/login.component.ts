@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
         userCredential.user.getIdToken()
           .then(token => {
             this.bearerToken = token;
-            this.rest.set_bearer_token(token);
+            sessionStorage.setItem('token', token);
             this.router.navigate(['/experiments']);
           });
       });
