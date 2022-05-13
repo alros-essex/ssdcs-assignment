@@ -45,6 +45,7 @@
   },
   "peerDependencies": {
     "firebase": "^9.8.1",
-    "@angular/fire": "^7.3.0"
+    "@angular/fire": "^7.3.0",
+    "@angular/material": "^13.3.7"
   }
 }

@@ -1,0 +1,6 @@
+<mat-toolbar color="primary">
+  <span>Safe Repository</span>
+  <a routerLink="/experiments" mat-button>Experiments</a>
+  <a *ngIf="isUserLoggedIn();else unauthenticated" (click)="logUserOut()" mat-button>Logout</a>
+  <ng-template #unauthenticated><a mat-button>Login</a></ng-template>
+</mat-toolbar>

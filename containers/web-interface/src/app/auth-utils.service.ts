@@ -25,7 +25,11 @@ export class AuthUtilsService implements CanActivate {
   }
 
   logout(): void {
-    sessionStorage.setItem('token', null);
+    sessionStorage.removeItem('token');
     this.router.navigate(['/login']);
+  }
+
+  isLoggedIn(): boolean {
+    return !!sessionStorage.getItem('token');
   }
 }
