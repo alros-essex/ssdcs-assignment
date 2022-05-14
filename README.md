@@ -4,7 +4,7 @@
 
 📜 [team contract](documents/TeamContract.docx)
 
-🍉 [draft of MyMONIT](documents/safe-repository.pdf)
+🍉 [Documentation MyMONIT](documents/safe-repository.pdf)
 
 🔎 [turnitin](documents/turnitin.pdf)
 
