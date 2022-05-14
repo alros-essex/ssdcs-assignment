@@ -18,8 +18,8 @@
 
 🔥 [README](README/README.pdf)
 
-<img src="https://img.shields.io/badge/Content-almost_complete-%230aa"/>
-<img src="https://img.shields.io/badge/Turnitin-todo-%230aa"/>
+<img src="https://img.shields.io/badge/Content-complete-%230a0"/>
+<img src="https://img.shields.io/badge/Turnitin-ok-%230a0"/>
 
 🎁 [Presentation](README/presentation.keynote.pdf)
 

@@ -24,30 +24,3 @@ CREATE TABLE USERS
     PRIMARY KEY(ID),
     FOREIGN KEY (ROLE) REFERENCES ROLES(ID)
 );
-
-INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, ROLE)
-VALUES(
-    'A001', 
-    'Allan Alcorn',
-    '5MS0kr1nE5Qm7ZNzAyHNCVfapcf2',
-    'aalcorn@home.cern',
-    (SELECT ID FROM ROLES WHERE NAME = 'ADMIN')
-);
-
-INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, ROLE)
-VALUES(
-    'S001', 
-    'Peter Higg',
-    'uJayGH994iVa2TY5auSNYZoUpwk1',
-    'phigg@home.cern', 
-    (SELECT ID FROM ROLES WHERE NAME = 'SCIENTIST')
-);
-
-INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, ROLE)
-VALUES(
-    'S002', 
-    'Katie Bouman',
-    'hirbBCceXlWUGdpNHUpaNtworjm2',
-    'kbouman@home.cern', 
-    (SELECT ID FROM ROLES WHERE NAME = 'SCIENTIST')
-);

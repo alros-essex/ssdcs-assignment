@@ -33,10 +33,13 @@ class FlaskResource(ABC):
     def get_user(self):
         '''retrieves the user from the request'''
         token = request.headers['Authorization'].split()[1]
-        decoded_token = auth.verify_id_token(token)
-        uid = decoded_token['uid']
-        user = self._user_service.read_users_by_username(uid)
-        return user.user_id
+        try:
+            decoded_token = auth.verify_id_token(token)
+            uid = decoded_token['uid']
+            user = self._user_service.read_users_by_username(uid)
+            return user.user_id
+        except auth.InvalidIdTokenError as e:
+            raise AuthorizationException
 
     def metadata(self, api:str, method:str, user:str):
         '''generates standardized metadata'''
