@@ -10,6 +10,8 @@
 -- add some users
 --
 
+use my_monit;
+
 INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, ROLE)
 VALUES(
     'A001', 
