@@ -17,10 +17,3 @@ CREATE TABLE EXPERIMENTS
     
     PRIMARY KEY(ID)
 );
-
---
--- add some data
---
-INSERT INTO EXPERIMENTS(NAME) VALUE('device-vibrations');
-
-INSERT INTO EXPERIMENTS(NAME) VALUE('black-holes');
