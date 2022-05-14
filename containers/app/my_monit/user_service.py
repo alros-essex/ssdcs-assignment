@@ -57,7 +57,7 @@ class UserService():
                         username = user_dict['username'],
                         role = user_dict['role'])
             if not user.is_valid() or \
-                len(self._storage.read_users_by_username(user.username))>0 or \
+                self._storage.read_users_by_username(user.username) is not None or \
                 len(self._storage.read_users_by_email(user.email))>0:
                 raise InvalidArgument
             self._logging.info(msg = 'insert user: {user}',

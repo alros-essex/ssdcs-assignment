@@ -51,7 +51,7 @@ class TestUserService(unittest.TestCase):
         '''test insert logic'''
         user_service = UserService(storage = self.storage, logging = Mock())
         user_service.is_admin = MagicMock(return_value = True)
-        self.storage.read_users_by_username = MagicMock(return_value = [])
+        self.storage.read_users_by_username = MagicMock(return_value = None)
         self.storage.read_users_by_email = MagicMock(return_value = [])
 
         user_service.insert_user({
