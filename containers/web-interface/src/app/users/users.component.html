@@ -1,1 +1,5 @@
-<p>users works!</p>
+<div *ngIf="users">
+  <li *ngFor="let u of users">
+    <a routerLink="/usersAdmin/{{u.user_id}}">{{u.user_id}}, {{u.email}}, {{u.name}}</a>
+  </li>
+</div>

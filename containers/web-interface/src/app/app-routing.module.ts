@@ -4,6 +4,8 @@ import {MeasureComponent} from './measure/measure.component';
 import {ExperimentsComponent} from './experiments/experiments.component';
 import {LoginComponent} from './login/login.component';
 import {AuthUtilsService} from "./auth-utils.service";
+import {UsersComponent} from "./users/users.component";
+import {UserDetailComponent} from "./user-detail/user-detail.component";
 
 const routes: Routes = [
   {
@@ -19,6 +21,15 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'usersAdmin',
+    component: UsersComponent,
+    canActivate: [AuthUtilsService]
+  },
+  {
+    path: 'usersAdmin/:id',
+    component: UserDetailComponent
   },
   {
     path: '', redirectTo: '/login', pathMatch: 'full'

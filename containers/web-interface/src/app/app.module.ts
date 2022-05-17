@@ -13,6 +13,8 @@ import {FormsModule} from '@angular/forms';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
+import { UserDetailComponent } from './user-detail/user-detail.component';
+import { NewUserComponent } from './new-user/new-user.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import {MatButtonModule} from '@angular/material/button';
     UsersComponent,
     ExperimentsComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    UserDetailComponent,
+    NewUserComponent
   ],
   imports: [
     HttpClientModule,

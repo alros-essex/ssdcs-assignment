@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {RestClientService} from '../rest-client.service';
 import {Experiments} from './experiments';
-import {Measure} from '../measure';
+import {AuthUtilsService} from '../auth-utils.service';
 
 @Component({
   selector: 'app-experiments',
@@ -16,22 +16,16 @@ export class ExperimentsComponent implements OnInit {
     name: ''
   };
 
-  constructor(private rest: RestClientService) {
+  constructor(private rest: RestClientService, private authService: AuthUtilsService) {
   }
 
   // declaring a variable and get the rest service to assign measures to the variable
   // subscribe to show an error
   getexperiments(): void {
-    this.rest.get_experiments().subscribe(e => this.experiments = e);
+    this.rest.get_experiments().subscribe(e => {
+      this.experiments = e.sort((a, b) => a.experiment_id > b.experiment_id ? 1 : -1);
+    });
   }
-
-  // get_measure_for_experiment(experimentId: string): Measure {
-  //   let measure;
-  //   this.rest.get_measure_for_experiment(experimentId)
-  //     .subscribe(m => measure = m);
-  //
-  //   return measure;
-  // }
 
   save_experiment(): void {
     console.log(`Saving new experiment ${this.newExperiment.name}`);
@@ -42,6 +36,13 @@ export class ExperimentsComponent implements OnInit {
     this.getexperiments();
   }
 
+  isUserAdmin(): boolean {
+    return this.authService.isLoggedInUserAdmin();
+  }
+
+  isUserScientist(): boolean {
+    return this.authService.isLoggedInUserScientist();
+  }
 }
 
 

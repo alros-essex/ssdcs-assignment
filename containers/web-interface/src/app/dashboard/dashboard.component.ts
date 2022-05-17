@@ -8,8 +8,6 @@ import {AuthUtilsService} from '../auth-utils.service';
 })
 export class DashboardComponent implements OnInit {
 
-  loggedIn?: boolean;
-
   constructor(private authUtils: AuthUtilsService) {
   }
 
@@ -22,6 +20,18 @@ export class DashboardComponent implements OnInit {
 
   logUserOut(): void {
     this.authUtils.logout();
+  }
+
+  getUserName(): string {
+    return this.authUtils.getLoggedInUserDetails()?.username;
+  }
+
+  isUserAdmin(): boolean {
+    return this.authUtils.isLoggedInUserAdmin();
+  }
+
+  private logMessage(message: string): void {
+    console.log(`[DashboardComponent]: ${message}`);
   }
 
 }

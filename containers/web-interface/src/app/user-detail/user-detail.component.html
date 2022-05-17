@@ -1,0 +1,16 @@
+<button routerLink="/usersAdmin">Back</button>
+<div *ngIf="user">
+  <label>User id: {{user.user_id}}</label>
+  <label>User role: {{user.role}}</label>
+
+  <label for="user-name">User name:</label>
+  <input id="user-name" [(ngModel)]="user.name" placeholder="{{user.name}}">
+
+  <label for="user-username">User username:</label>
+  <input id="user-username" [(ngModel)]="user.username" placeholder="{{user.username}}">
+
+  <label for="user-email">User email:</label>
+  <input id="user-email" [(ngModel)]="user.email" placeholder="{{user.email}}">
+
+  <button (click)="updateUser()">Update user details</button>
+</div>

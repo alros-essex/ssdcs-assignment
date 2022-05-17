@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import {firstValueFrom, Observable, of} from 'rxjs';
 import {logindetails} from './login/logindetails';
 import {Experiments} from './experiments/experiments';
 import {Measure} from './measure';
+import {User} from './user';
 
 
 @Injectable({
@@ -27,11 +28,8 @@ export class RestClientService {
   }
 
   private set_bearer_token(): void {
-    console.log('Rest service has an unassigned token. Checking session for token');
-    if (!this.bearerToken) {
-      const token = sessionStorage.getItem('token');
-      console.log(`Token found! ${token}`);
-      this.bearerToken = token;
+    if (!!sessionStorage.getItem('token')) {
+      this.bearerToken = sessionStorage.getItem('token');
     }
   }
 
@@ -48,10 +46,17 @@ export class RestClientService {
   getlogin(details: logindetails): Observable<logindetails> {
     this.set_bearer_token();
     const url = `${this.apiUrl}/login`;
-    console.log(details);
-    console.log(url);
+    this.logMessage(JSON.stringify(details));
+    this.logMessage(url);
     // post the details to the server //tell python to interpret this as json
-    return this.http.post<logindetails>(url, details, this.httpOptions);
+    return this.http.post<logindetails>(url, details, {headers: this.make_headers()});
+  }
+
+  getUsers(): Observable<User[]> {
+    this.set_bearer_token();
+    const url = `${this.apiUrl}/users/`;
+    this.logMessage('Getting users from api');
+    return this.http.get<User[]>(url, {headers: this.make_headers()});
   }
 
   // ngOnInit(): void {}
@@ -66,7 +71,7 @@ export class RestClientService {
     this.set_bearer_token();
     const url = `${this.apiUrl}/measures/${experimentId}`;
 
-    console.log(`Trying for ${url}`);
+    this.logMessage(`Trying for ${url}`);
     return this.http.get<Measure[]>(url, {headers: this.make_headers()});
   }
 
@@ -81,12 +86,33 @@ export class RestClientService {
     const url = `${this.apiUrl}/experiments/`;
     const body = {name};
 
-    console.log(`POSTing to ${url} to save ${name}`);
-    console.log(body);
+    this.logMessage(`POSTing to ${url} to save ${name}`);
+    this.logMessage(JSON.stringify(body));
 
     this.http.post<any>(url, body, {headers: this.make_headers()})
       .subscribe(value => {
-        console.log(value);
+        this.logMessage(`response from experiment endpoint: ${value}`);
       });
+  }
+
+  putUser(userId: string, name: string, username: string, email: string): void {
+    this.set_bearer_token();
+    const url = `${this.apiUrl}/users/${userId}`;
+    const payload = {name, username, email};
+    this.logMessage('PUTting user');
+    this.http.put<any>(url, payload, {headers: this.make_headers()})
+      .subscribe(response => this.logMessage(`PUT user endpoint response: ${JSON.stringify(response)}`));
+  }
+
+  postUser(user: User): void {
+    this.set_bearer_token();
+    const url = `${this.apiUrl}/users/`;
+    this.logMessage('POSTing user');
+    this.http.post<any>(url, user, {headers: this.make_headers()})
+      .subscribe(response => this.logMessage(`POST user endpoint response: ${JSON.stringify(response)}`));
+  }
+
+  private logMessage(message: string): void {
+    console.log(`[RestClientService]: ${message}`);
   }
 }
