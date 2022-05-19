@@ -5,4 +5,19 @@
 
 .mat-button {
   color: white;
+  margin-right: 20px;
+  font-family: monospace;
 }
+
+#Logo {
+  width: 150px;
+  margin-right: 20px;
+  border: white solid 1px;
+ }
+
+ #Welcome {
+   font-family: cursive;
+   margin-right: 20px;
+ }
+
+ 

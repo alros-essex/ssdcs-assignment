@@ -1,0 +1,43 @@
+#Heading {
+    font-family: monospace;
+    margin-left: 20px;
+   }
+   
+   label {
+       font-family: monospace;
+       padding-right: 20px;
+       width: 60px;
+       align-content: center;
+       margin-left: 20px;
+   
+   }
+
+   #existing_experiments
+{
+    margin-left: 20px;
+    font-family: monospace;
+}
+
+#experiment
+{
+    margin-left: 20px;
+    font-family: monospace;
+    color: #004C93;
+}
+   
+   input {
+       margin-top: 30px;
+       color: #ccc;
+       font-family: monospace;
+   }
+   
+   button {
+       font-family: monospace;
+       color: #004C93;
+       width: 150px;
+       border: #004C93 solid 1px;
+       box-shadow: #44D7B6 2px;
+       margin-left: 20px;
+       margin-top: 5px;
+   }
+   

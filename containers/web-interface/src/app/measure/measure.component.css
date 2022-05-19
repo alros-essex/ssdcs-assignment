@@ -1,0 +1,19 @@
+#Heading{
+    font-family: monospace;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 20px;
+}
+
+button {
+    font-family: monospace;
+    color: #004C93;
+    width: 100px;
+    border: #004C93 solid 1px;
+    margin-left: 20px;
+}
+
+p {
+    margin-left: 20px;
+    font-family: monospace;
+}

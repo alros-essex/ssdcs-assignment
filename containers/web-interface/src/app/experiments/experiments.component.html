@@ -1,8 +1,9 @@
-<h1>Experiments and Measures</h1>
+<h1 id="Heading">Experiments and Measures</h1>
+
 
 <div *ngFor="let e of experiments">
-      <a *ngIf="isUserAdmin()">{{e.experiment_id}}, {{e.name}}</a>
-      <a *ngIf="isUserScientist()" routerLink="/measures/{{e.experiment_id}}">{{e.experiment_id}}, {{e.name}}</a>
+      <a id="existing_experiments" *ngIf="isUserAdmin()">{{e.experiment_id}}, {{e.name}}</a>
+      <a id="experiment" routerLink="/measures/{{e.experiment_id}}">{{e.experiment_id}}, {{e.name}}</a>
 </div>
 
 <div *ngIf="isUserAdmin()">
@@ -10,6 +11,5 @@
   
     <input type="text" id="new_experiment" name="new_experiment" [(ngModel)]="newExperiment.name"><br><br>
     <button  (click)="save_experiment()">Save experiment</button>
-  
     
 </div>
