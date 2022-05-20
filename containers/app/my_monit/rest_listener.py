@@ -39,7 +39,7 @@ class FlaskResource(ABC):
             user = self._user_service.read_users_by_username(uid)
             return user.user_id
         except auth.InvalidIdTokenError as e:
-            raise AuthorizationException
+            raise AuthorizationException from e
 
     def metadata(self, api:str, method:str, user:str):
         '''generates standardized metadata'''
